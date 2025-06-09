@@ -4,6 +4,10 @@ import { ThemeProvider } from "next-themes";
 
 import "@/styles/globals.css";
 
+import { AppNavbar } from "@/components/layout/app-navbar";
+import { BackgroundPattern } from "@/components/layout/background-pattern";
+import SystemProvider from "@/components/system-provider";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -20,9 +24,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="pt-BR" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} min-h-svh overflow-x-hidden font-sans antialiased [--navbar-height:calc(theme(spacing.14))]`}
       >
         <ThemeProvider
           attribute="class"
@@ -30,7 +34,13 @@ export default function RootLayout({
           disableTransitionOnChange
           enableSystem
         >
-          {children}
+          <SystemProvider>
+            <AppNavbar />
+
+            {children}
+
+            <BackgroundPattern />
+          </SystemProvider>
         </ThemeProvider>
       </body>
     </html>
