@@ -6,10 +6,23 @@ import { useSystem } from "@/hooks/use-system";
 import { SystemComponent } from "@/components/system-component";
 
 export function SapOne() {
-  const { system, setSystem } = useSystem();
+  const {
+    system: {
+      counter,
+      accumulator,
+      input,
+      unit,
+      memory,
+      register,
+      instructions,
+      output,
+      clock,
+      clear,
+    },
+  } = useSystem();
 
   return (
-    <div className="flex">
+    <div className="flex w-fit">
       <div className="flex w-fit flex-col">
         <SystemComponent
           className="mb-12"
@@ -21,10 +34,10 @@ export function SapOne() {
           connections={{
             right: [
               [
-                { dir: "ltr", active: true },
-                { dir: "ltr", active: true },
-                { dir: "ltr", active: true },
-                { dir: "ltr", active: true },
+                { dir: "ltr", active: false },
+                { dir: "ltr", active: false },
+                { dir: "ltr", active: false },
+                { dir: "ltr", active: false },
               ],
             ],
             left: [
@@ -36,19 +49,19 @@ export function SapOne() {
                     </>
                   ),
                   dir: "ltr",
-                  active: true,
+                  active: counter.load,
                 },
               ],
               [
                 {
                   label: <span className="overline">CLK</span>,
                   dir: "ltr",
-                  active: true,
+                  active: !clock,
                 },
                 {
                   label: <span className="overline">CLR</span>,
                   dir: "ltr",
-                  active: true,
+                  active: !clear,
                 },
                 {
                   label: (
@@ -57,7 +70,7 @@ export function SapOne() {
                     </>
                   ),
                   dir: "ltr",
-                  active: true,
+                  active: counter.enabled,
                 },
               ],
             ],
@@ -73,18 +86,18 @@ export function SapOne() {
           connections={{
             right: [
               [
-                { dir: "rtl", active: true },
-                { dir: "rtl", active: true },
-                { dir: "rtl", active: true },
-                { dir: "rtl", active: true },
+                { dir: "rtl", active: false },
+                { dir: "rtl", active: false },
+                { dir: "rtl", active: false },
+                { dir: "rtl", active: false },
               ],
             ],
             bottom: [
               [
-                { dir: "ttb", active: true },
-                { dir: "ttb", active: true },
-                { dir: "ttb", active: true },
-                { dir: "ttb", active: true },
+                { dir: "ttb", active: false },
+                { dir: "ttb", active: false },
+                { dir: "ttb", active: false },
+                { dir: "ttb", active: false },
               ],
             ],
             left: [
@@ -97,14 +110,14 @@ export function SapOne() {
                     </>
                   ),
                   dir: "ltr",
-                  active: true,
+                  active: !input.load,
                 },
               ],
               [
                 {
                   label: <span className="overline">CLK</span>,
                   dir: "ltr",
-                  active: true,
+                  active: !clock,
                 },
               ],
             ],
@@ -120,28 +133,28 @@ export function SapOne() {
           connections={{
             right: [
               [
-                { dir: "rtl", active: true },
-                { dir: "rtl", active: true },
-                { dir: "rtl", active: true },
-                { dir: "rtl", active: true },
-                { dir: "rtl", active: true },
-                { dir: "rtl", active: true },
-                { dir: "rtl", active: true },
-                { dir: "rtl", active: true },
+                { dir: "rtl", active: false },
+                { dir: "rtl", active: false },
+                { dir: "rtl", active: false },
+                { dir: "rtl", active: false },
+                { dir: "rtl", active: false },
+                { dir: "rtl", active: false },
+                { dir: "rtl", active: false },
+                { dir: "rtl", active: false },
               ],
             ],
             bottom: [
               [
-                { dir: "ttb", active: true },
-                { dir: "ttb", active: true },
-                { dir: "ttb", active: true },
-                { dir: "ttb", active: true },
+                { dir: "ttb", active: false },
+                { dir: "ttb", active: false },
+                { dir: "ttb", active: false },
+                { dir: "ttb", active: false },
               ],
               [
-                { dir: "ttb", active: true },
-                { dir: "ttb", active: true },
-                { dir: "ttb", active: true },
-                { dir: "ttb", active: true },
+                { dir: "ttb", active: false },
+                { dir: "ttb", active: false },
+                { dir: "ttb", active: false },
+                { dir: "ttb", active: false },
               ],
             ],
             left: [
@@ -149,7 +162,7 @@ export function SapOne() {
                 {
                   label: <span className="overline">CE</span>,
                   dir: "ltr",
-                  active: true,
+                  active: !memory.enabled,
                 },
               ],
             ],
@@ -165,28 +178,28 @@ export function SapOne() {
           connections={{
             right: [
               [
-                { dir: "ltr", active: true },
-                { dir: "ltr", active: true },
-                { dir: "ltr", active: true },
-                { dir: "ltr", active: true },
-                { dir: "ltr", active: true },
-                { dir: "ltr", active: true },
-                { dir: "ltr", active: true },
-                { dir: "ltr", active: true },
+                { dir: "ltr", active: false },
+                { dir: "ltr", active: false },
+                { dir: "ltr", active: false },
+                { dir: "ltr", active: false },
+                { dir: "ltr", active: false },
+                { dir: "ltr", active: false },
+                { dir: "ltr", active: false },
+                { dir: "ltr", active: false },
               ],
               [
-                { dir: "rtl", active: true },
-                { dir: "rtl", active: true },
-                { dir: "rtl", active: true },
-                { dir: "rtl", active: true },
+                { dir: "rtl", active: false },
+                { dir: "rtl", active: false },
+                { dir: "rtl", active: false },
+                { dir: "rtl", active: false },
               ],
             ],
             bottom: [
               [
-                { dir: "ttb", active: true },
-                { dir: "ttb", active: true },
-                { dir: "ttb", active: true },
-                { dir: "ttb", active: true },
+                { dir: "ttb", active: false },
+                { dir: "ttb", active: false },
+                { dir: "ttb", active: false },
+                { dir: "ttb", active: false },
               ],
             ],
             left: [
@@ -199,19 +212,19 @@ export function SapOne() {
                     </>
                   ),
                   dir: "ltr",
-                  active: true,
+                  active: !instructions.load,
                 },
               ],
               [
                 {
                   label: "CLK",
                   dir: "ltr",
-                  active: true,
+                  active: clock,
                 },
                 {
                   label: "CLR",
                   dir: "ltr",
-                  active: true,
+                  active: clear,
                 },
                 {
                   label: (
@@ -221,7 +234,7 @@ export function SapOne() {
                     </>
                   ),
                   dir: "ltr",
-                  active: true,
+                  active: !instructions.enabled,
                 },
               ],
             ],
@@ -237,17 +250,17 @@ export function SapOne() {
           connections={{
             right: [
               [
-                { label: <>CLK</>, dir: "rtl", active: true },
+                { label: <>CLK</>, dir: "rtl", active: clock },
                 {
                   label: <span className="overline">CLK</span>,
                   dir: "rtl",
-                  active: true,
+                  active: !clock,
                 },
-                { label: <>CLR</>, dir: "rtl", active: true },
+                { label: <>CLR</>, dir: "rtl", active: clear },
                 {
                   label: <span className="overline">CLR</span>,
                   dir: "rtl",
-                  active: true,
+                  active: !clear,
                 },
               ],
             ],
@@ -260,7 +273,7 @@ export function SapOne() {
                     </>
                   ),
                   dir: "btt",
-                  active: true,
+                  active: counter.load,
                 },
                 {
                   label: (
@@ -269,7 +282,7 @@ export function SapOne() {
                     </>
                   ),
                   dir: "btt",
-                  active: true,
+                  active: counter.enabled,
                 },
                 {
                   label: (
@@ -279,12 +292,12 @@ export function SapOne() {
                     </>
                   ),
                   dir: "btt",
-                  active: true,
+                  active: !input.load,
                 },
                 {
                   label: <span className="overline">CE</span>,
                   dir: "btt",
-                  active: true,
+                  active: !memory.enabled,
                 },
                 {
                   label: (
@@ -294,7 +307,7 @@ export function SapOne() {
                     </>
                   ),
                   dir: "btt",
-                  active: true,
+                  active: !instructions.load,
                 },
                 {
                   label: (
@@ -304,7 +317,7 @@ export function SapOne() {
                     </>
                   ),
                   dir: "btt",
-                  active: true,
+                  active: !instructions.enabled,
                 },
                 {
                   label: (
@@ -314,7 +327,7 @@ export function SapOne() {
                     </>
                   ),
                   dir: "btt",
-                  active: true,
+                  active: !accumulator.load,
                 },
                 {
                   label: (
@@ -323,7 +336,7 @@ export function SapOne() {
                     </>
                   ),
                   dir: "btt",
-                  active: true,
+                  active: accumulator.enabled,
                 },
                 {
                   label: (
@@ -332,7 +345,7 @@ export function SapOne() {
                     </>
                   ),
                   dir: "btt",
-                  active: true,
+                  active: unit.subtraction,
                 },
                 {
                   label: (
@@ -341,7 +354,7 @@ export function SapOne() {
                     </>
                   ),
                   dir: "btt",
-                  active: true,
+                  active: unit.enable,
                 },
                 {
                   label: (
@@ -351,7 +364,7 @@ export function SapOne() {
                     </>
                   ),
                   dir: "btt",
-                  active: true,
+                  active: !register.load,
                 },
                 {
                   label: (
@@ -361,7 +374,7 @@ export function SapOne() {
                     </>
                   ),
                   dir: "btt",
-                  active: true,
+                  active: !output.load,
                 },
               ],
             ],
@@ -370,8 +383,8 @@ export function SapOne() {
       </div>
 
       <div
-        className="bg-muted data-[active=true]:bg-primary h-[698px] w-4 rounded-xs border data-[active=true]:animate-pulse"
-        data-active={true}
+        className="bg-muted data-[active=true]:bg-primary left-1/2 z-10 -mx-4 h-[694px] w-4 rounded-xs border"
+        data-active={false}
       />
 
       <div className="flex w-fit flex-col">
@@ -392,14 +405,14 @@ export function SapOne() {
                     </>
                   ),
                   dir: "rtl",
-                  active: true,
+                  active: !accumulator.load,
                 },
               ],
               [
                 {
                   label: "CLK",
                   dir: "rtl",
-                  active: true,
+                  active: clock,
                 },
               ],
               [
@@ -410,42 +423,42 @@ export function SapOne() {
                     </>
                   ),
                   dir: "rtl",
-                  active: true,
+                  active: accumulator.enabled,
                 },
               ],
             ],
             left: [
               [
-                { dir: "ltr", active: true },
-                { dir: "ltr", active: true },
-                { dir: "ltr", active: true },
-                { dir: "ltr", active: true },
-                { dir: "ltr", active: true },
-                { dir: "ltr", active: true },
-                { dir: "ltr", active: true },
-                { dir: "ltr", active: true },
+                { dir: "ltr", active: false },
+                { dir: "ltr", active: false },
+                { dir: "ltr", active: false },
+                { dir: "ltr", active: false },
+                { dir: "ltr", active: false },
+                { dir: "ltr", active: false },
+                { dir: "ltr", active: false },
+                { dir: "ltr", active: false },
               ],
               [
-                { dir: "ltr", active: true },
-                { dir: "ltr", active: true },
-                { dir: "ltr", active: true },
-                { dir: "ltr", active: true },
-                { dir: "ltr", active: true },
-                { dir: "ltr", active: true },
-                { dir: "ltr", active: true },
-                { dir: "ltr", active: true },
+                { dir: "ltr", active: false },
+                { dir: "ltr", active: false },
+                { dir: "ltr", active: false },
+                { dir: "ltr", active: false },
+                { dir: "ltr", active: false },
+                { dir: "ltr", active: false },
+                { dir: "ltr", active: false },
+                { dir: "ltr", active: false },
               ],
             ],
             bottom: [
               [
-                { dir: "ttb", active: true },
-                { dir: "ttb", active: true },
-                { dir: "ttb", active: true },
-                { dir: "ttb", active: true },
-                { dir: "ttb", active: true },
-                { dir: "ttb", active: true },
-                { dir: "ttb", active: true },
-                { dir: "ttb", active: true },
+                { dir: "ttb", active: false },
+                { dir: "ttb", active: false },
+                { dir: "ttb", active: false },
+                { dir: "ttb", active: false },
+                { dir: "ttb", active: false },
+                { dir: "ttb", active: false },
+                { dir: "ttb", active: false },
+                { dir: "ttb", active: false },
               ],
             ],
           }}
@@ -463,12 +476,11 @@ export function SapOne() {
                 {
                   label: (
                     <>
-                      <span className="overline">S</span>
-                      <sub>U</sub>
+                      S<sub>U</sub>
                     </>
                   ),
                   dir: "rtl",
-                  active: true,
+                  active: unit.subtraction,
                 },
               ],
               [
@@ -479,32 +491,32 @@ export function SapOne() {
                     </>
                   ),
                   dir: "rtl",
-                  active: true,
+                  active: unit.enable,
                 },
               ],
             ],
             left: [
               [
-                { dir: "ltr", active: true },
-                { dir: "ltr", active: true },
-                { dir: "ltr", active: true },
-                { dir: "ltr", active: true },
-                { dir: "ltr", active: true },
-                { dir: "ltr", active: true },
-                { dir: "ltr", active: true },
-                { dir: "ltr", active: true },
+                { dir: "ltr", active: false },
+                { dir: "ltr", active: false },
+                { dir: "ltr", active: false },
+                { dir: "ltr", active: false },
+                { dir: "ltr", active: false },
+                { dir: "ltr", active: false },
+                { dir: "ltr", active: false },
+                { dir: "ltr", active: false },
               ],
             ],
             bottom: [
               [
-                { dir: "ttb", active: true },
-                { dir: "ttb", active: true },
-                { dir: "ttb", active: true },
-                { dir: "ttb", active: true },
-                { dir: "ttb", active: true },
-                { dir: "ttb", active: true },
-                { dir: "ttb", active: true },
-                { dir: "ttb", active: true },
+                { dir: "ttb", active: false },
+                { dir: "ttb", active: false },
+                { dir: "ttb", active: false },
+                { dir: "ttb", active: false },
+                { dir: "ttb", active: false },
+                { dir: "ttb", active: false },
+                { dir: "ttb", active: false },
+                { dir: "ttb", active: false },
               ],
             ],
           }}
@@ -528,27 +540,27 @@ export function SapOne() {
                     </>
                   ),
                   dir: "rtl",
-                  active: true,
+                  active: !register.load,
                 },
               ],
               [
                 {
                   label: "CLK",
                   dir: "rtl",
-                  active: true,
+                  active: clock,
                 },
               ],
             ],
             left: [
               [
-                { dir: "ltr", active: true },
-                { dir: "ltr", active: true },
-                { dir: "ltr", active: true },
-                { dir: "ltr", active: true },
-                { dir: "ltr", active: true },
-                { dir: "ltr", active: true },
-                { dir: "ltr", active: true },
-                { dir: "ltr", active: true },
+                { dir: "ltr", active: false },
+                { dir: "ltr", active: false },
+                { dir: "ltr", active: false },
+                { dir: "ltr", active: false },
+                { dir: "ltr", active: false },
+                { dir: "ltr", active: false },
+                { dir: "ltr", active: false },
+                { dir: "ltr", active: false },
               ],
             ],
           }}
@@ -571,39 +583,39 @@ export function SapOne() {
                     </>
                   ),
                   dir: "rtl",
-                  active: true,
+                  active: !output.load,
                 },
               ],
               [
                 {
                   label: "CLK",
                   dir: "rtl",
-                  active: true,
+                  active: clock,
                 },
               ],
             ],
             bottom: [
               [
-                { dir: "ttb", active: true },
-                { dir: "ttb", active: true },
-                { dir: "ttb", active: true },
-                { dir: "ttb", active: true },
-                { dir: "ttb", active: true },
-                { dir: "ttb", active: true },
-                { dir: "ttb", active: true },
-                { dir: "ttb", active: true },
+                { dir: "ttb", active: false },
+                { dir: "ttb", active: false },
+                { dir: "ttb", active: false },
+                { dir: "ttb", active: false },
+                { dir: "ttb", active: false },
+                { dir: "ttb", active: false },
+                { dir: "ttb", active: false },
+                { dir: "ttb", active: false },
               ],
             ],
             left: [
               [
-                { dir: "ltr", active: true },
-                { dir: "ltr", active: true },
-                { dir: "ltr", active: true },
-                { dir: "ltr", active: true },
-                { dir: "ltr", active: true },
-                { dir: "ltr", active: true },
-                { dir: "ltr", active: true },
-                { dir: "ltr", active: true },
+                { dir: "ltr", active: false },
+                { dir: "ltr", active: false },
+                { dir: "ltr", active: false },
+                { dir: "ltr", active: false },
+                { dir: "ltr", active: false },
+                { dir: "ltr", active: false },
+                { dir: "ltr", active: false },
+                { dir: "ltr", active: false },
               ],
             ],
           }}

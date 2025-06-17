@@ -43,7 +43,7 @@ export function SystemComponent({
             ))}
         </div>
 
-        <Card className="h-full w-52 p-4">
+        <Card className="h-full w-64 p-4">
           <CardTitle className="my-auto text-center">{label}</CardTitle>
         </Card>
 

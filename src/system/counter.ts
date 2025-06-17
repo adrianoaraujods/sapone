@@ -1,4 +1,16 @@
 import type { SystemComponent } from "@/lib/system";
 
-// to pass more params, pass a generic with the types in the SystemComponent<{...}>
-export function example({ system, update }: SystemComponent) {}
+export function counter({ system, update }: SystemComponent) {
+  // `system` is the current state
+
+  // example of update
+  update((prev) => {
+    const newSystem = { ...prev }; // copy the previous values
+
+    newSystem.counter.enabled = true; // updates a value
+
+    return newSystem; // return the updated system
+  });
+
+  // if the `system` is accessed after the update, it will have the new values
+}
