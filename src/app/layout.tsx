@@ -4,7 +4,6 @@ import { ThemeProvider } from "next-themes";
 
 import "@/styles/globals.css";
 
-import { AppNavbar } from "@/components/layout/app-navbar";
 import { BackgroundPattern } from "@/components/layout/background-pattern";
 import SystemProvider from "@/components/system-provider";
 
@@ -26,7 +25,7 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} min-h-svh overflow-x-hidden font-sans antialiased [--navbar-height:calc(theme(spacing.14))]`}
+        className={`${geistSans.variable} ${geistMono.variable} min-h-svh overflow-x-hidden font-sans antialiased`}
       >
         <ThemeProvider
           attribute="class"
@@ -35,8 +34,6 @@ export default function RootLayout({
           enableSystem
         >
           <SystemProvider>
-            <AppNavbar />
-
             {children}
 
             <BackgroundPattern />
