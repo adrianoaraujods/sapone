@@ -9,6 +9,8 @@ import { Display } from "@/components/display";
 import { SystemComponent } from "@/components/system-component";
 import { Card } from "@/components/ui/card";
 
+import type { Hex } from "@/components/display";
+
 export function SapOne({ className, ...props }: React.ComponentProps<"div">) {
   const {
     system: {
@@ -626,8 +628,8 @@ export function SapOne({ className, ...props }: React.ComponentProps<"div">) {
         />
 
         <Card className="mx-auto flex h-full w-64 flex-row items-center justify-center p-4">
-          <Display digit={0x0} />
-          <Display digit={0x0} />
+          <Display digit={(output >> 4) as Hex} />
+          <Display digit={(output & 0x0f) as Hex} />
         </Card>
       </div>
     </div>
