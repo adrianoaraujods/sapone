@@ -29,22 +29,18 @@ const sectionVariants = cva("mx-auto w-full p-4 py-8", {
   },
 });
 
-export interface SectionProps
-  extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof sectionVariants> {
-  asChild?: boolean;
-}
+export type SectionProps = React.ComponentProps<"section"> &
+  VariantProps<typeof sectionVariants> & {
+    asChild?: boolean;
+  };
 
-function Section({
+export function Section({
   className,
   variant,
   maxWidth,
   asChild = false,
   ...props
-}: React.ComponentProps<"section"> &
-  VariantProps<typeof sectionVariants> & {
-    asChild?: boolean;
-  }) {
+}: SectionProps) {
   const Comp = asChild ? Slot : "section";
 
   return (
@@ -55,5 +51,3 @@ function Section({
     />
   );
 }
-
-export { Section, sectionVariants };
