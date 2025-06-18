@@ -17,9 +17,6 @@ const connectionVariants = cva<{
       btt: "flex-col-reverse h-12",
     },
   },
-  defaultVariants: {
-    dir: "ltr",
-  },
 });
 
 const wireVariants = cva<{
@@ -35,9 +32,6 @@ const wireVariants = cva<{
         btt: "w-2 h-full",
       },
     },
-    defaultVariants: {
-      dir: "ltr",
-    },
   }
 );
 
@@ -51,9 +45,6 @@ const labelVariants = cva<{
       ttb: "w-4 h-6",
       btt: "w-4 h-6",
     },
-  },
-  defaultVariants: {
-    dir: "ltr",
   },
 });
 
