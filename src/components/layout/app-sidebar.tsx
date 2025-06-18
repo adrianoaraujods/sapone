@@ -4,21 +4,19 @@ import * as React from "react";
 import Link from "next/link";
 
 import { GITHUB_URL } from "@/lib/config";
+import { GithubIcon } from "@/components/icon/github-icon";
+import { ThemesDropdown } from "@/components/themes-dropdown";
+import { Button } from "@/components/ui/button";
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
-  SidebarRail,
   SidebarSeparator,
   useSidebar,
 } from "@/components/ui/sidebar";
 
 import { SidebarCloseIcon, SidebarOpenIcon } from "lucide-react";
-
-import { GithubIcon } from "../icon/github-icon";
-import { ThemesDropdown } from "../themes-dropdown";
-import { Button } from "../ui/button";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { open, toggleSidebar } = useSidebar();

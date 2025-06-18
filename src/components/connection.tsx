@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { cva } from "class-variance-authority";
 
-import { Text } from "./typography/text";
+import { Text } from "@/components/typography/text";
 
 export type Direction = "ltr" | "rtl" | "ttb" | "btt";
 
