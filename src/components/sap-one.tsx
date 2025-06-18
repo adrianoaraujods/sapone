@@ -3,9 +3,12 @@
 import * as React from "react";
 
 import { useSystem } from "@/hooks/use-system";
+import { cn } from "@/lib/utils";
+import { Display } from "@/components/display";
 import { SystemComponent } from "@/components/system-component";
+import { Card } from "@/components/ui/card";
 
-export function SapOne() {
+export function SapOne({ className, ...props }: React.ComponentProps<"div">) {
   const {
     system: {
       counter,
@@ -22,7 +25,7 @@ export function SapOne() {
   } = useSystem();
 
   return (
-    <div className="flex w-fit">
+    <div className={cn("mx-auto flex w-fit", className)} {...props}>
       <div className="flex w-fit flex-col">
         <SystemComponent
           className="mb-12"
@@ -620,6 +623,11 @@ export function SapOne() {
             ],
           }}
         />
+
+        <Card className="mx-auto flex h-full w-64 flex-row items-center justify-center p-4">
+          <Display digit={0} />
+          <Display digit={0} />
+        </Card>
       </div>
     </div>
   );
