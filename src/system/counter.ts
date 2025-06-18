@@ -7,7 +7,7 @@ export function counter({ system, update }: SystemComponent) {
   update((prev) => {
     const newSystem = { ...prev }; // copy the previous values
 
-    newSystem.counter.enabled = true; // updates a value
+    newSystem.ram[15] = 0xff; // updates a value
 
     return newSystem; // return the updated system
   });

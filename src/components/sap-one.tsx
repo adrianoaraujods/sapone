@@ -3,6 +3,7 @@
 import * as React from "react";
 
 import { useSystem } from "@/hooks/use-system";
+import { getControlSignals, isBitSet } from "@/lib/system";
 import { cn } from "@/lib/utils";
 import { Display } from "@/components/display";
 import { SystemComponent } from "@/components/system-component";
@@ -11,18 +12,25 @@ import { Card } from "@/components/ui/card";
 export function SapOne({ className, ...props }: React.ComponentProps<"div">) {
   const {
     system: {
-      counter,
       accumulator,
-      input,
-      unit,
-      memory,
-      register,
-      instructions,
-      output,
-      clock,
+      bRegister,
+      bus,
       clear,
+      clock,
+      controlWord,
+      flags,
+      iRegister,
+      memoryAddressRegister,
+      output,
+      programCounter,
+      ram,
+      running,
+      tState,
+      unit,
     },
   } = useSystem();
+
+  const signals = getControlSignals(controlWord);
 
   return (
     <div className={cn("mx-auto flex w-fit", className)} {...props}>
@@ -37,10 +45,10 @@ export function SapOne({ className, ...props }: React.ComponentProps<"div">) {
           connections={{
             right: [
               [
-                { dir: "ltr", active: false },
-                { dir: "ltr", active: false },
-                { dir: "ltr", active: false },
-                { dir: "ltr", active: false },
+                { dir: "ltr", active: isBitSet(programCounter, 3) },
+                { dir: "ltr", active: isBitSet(programCounter, 2) },
+                { dir: "ltr", active: isBitSet(programCounter, 1) },
+                { dir: "ltr", active: isBitSet(programCounter, 0) },
               ],
             ],
             left: [
@@ -52,7 +60,7 @@ export function SapOne({ className, ...props }: React.ComponentProps<"div">) {
                     </>
                   ),
                   dir: "ltr",
-                  active: counter.load,
+                  active: signals.Cp,
                 },
               ],
               [
@@ -73,7 +81,7 @@ export function SapOne({ className, ...props }: React.ComponentProps<"div">) {
                     </>
                   ),
                   dir: "ltr",
-                  active: counter.enabled,
+                  active: signals.Ep,
                 },
               ],
             ],
@@ -89,18 +97,24 @@ export function SapOne({ className, ...props }: React.ComponentProps<"div">) {
           connections={{
             right: [
               [
-                { dir: "rtl", active: false },
-                { dir: "rtl", active: false },
-                { dir: "rtl", active: false },
-                { dir: "rtl", active: false },
+                { dir: "rtl", active: isBitSet(bus, 3) },
+                { dir: "rtl", active: isBitSet(bus, 2) },
+                { dir: "rtl", active: isBitSet(bus, 1) },
+                { dir: "rtl", active: isBitSet(bus, 0) },
               ],
             ],
             bottom: [
               [
-                { dir: "ttb", active: false },
-                { dir: "ttb", active: false },
-                { dir: "ttb", active: false },
-                { dir: "ttb", active: false },
+                { dir: "ttb", active: isBitSet(memoryAddressRegister, 7) },
+                { dir: "ttb", active: isBitSet(memoryAddressRegister, 6) },
+                { dir: "ttb", active: isBitSet(memoryAddressRegister, 5) },
+                { dir: "ttb", active: isBitSet(memoryAddressRegister, 4) },
+              ],
+              [
+                { dir: "ttb", active: isBitSet(memoryAddressRegister, 3) },
+                { dir: "ttb", active: isBitSet(memoryAddressRegister, 2) },
+                { dir: "ttb", active: isBitSet(memoryAddressRegister, 1) },
+                { dir: "ttb", active: isBitSet(memoryAddressRegister, 0) },
               ],
             ],
             left: [
@@ -113,7 +127,7 @@ export function SapOne({ className, ...props }: React.ComponentProps<"div">) {
                     </>
                   ),
                   dir: "ltr",
-                  active: !input.load,
+                  active: !signals.Lm,
                 },
               ],
               [
@@ -128,6 +142,7 @@ export function SapOne({ className, ...props }: React.ComponentProps<"div">) {
         />
 
         <SystemComponent
+          className="mb-12"
           label={
             <>
               RAM <br /> 16 x 8
@@ -136,28 +151,14 @@ export function SapOne({ className, ...props }: React.ComponentProps<"div">) {
           connections={{
             right: [
               [
-                { dir: "rtl", active: false },
-                { dir: "rtl", active: false },
-                { dir: "rtl", active: false },
-                { dir: "rtl", active: false },
-                { dir: "rtl", active: false },
-                { dir: "rtl", active: false },
-                { dir: "rtl", active: false },
-                { dir: "rtl", active: false },
-              ],
-            ],
-            bottom: [
-              [
-                { dir: "ttb", active: false },
-                { dir: "ttb", active: false },
-                { dir: "ttb", active: false },
-                { dir: "ttb", active: false },
-              ],
-              [
-                { dir: "ttb", active: false },
-                { dir: "ttb", active: false },
-                { dir: "ttb", active: false },
-                { dir: "ttb", active: false },
+                { dir: "rtl", active: isBitSet(bus, 7) },
+                { dir: "rtl", active: isBitSet(bus, 6) },
+                { dir: "rtl", active: isBitSet(bus, 5) },
+                { dir: "rtl", active: isBitSet(bus, 4) },
+                { dir: "rtl", active: isBitSet(bus, 3) },
+                { dir: "rtl", active: isBitSet(bus, 2) },
+                { dir: "rtl", active: isBitSet(bus, 1) },
+                { dir: "rtl", active: isBitSet(bus, 0) },
               ],
             ],
             left: [
@@ -165,7 +166,7 @@ export function SapOne({ className, ...props }: React.ComponentProps<"div">) {
                 {
                   label: <span className="overline">CE</span>,
                   dir: "ltr",
-                  active: !memory.enabled,
+                  active: !signals.CE,
                 },
               ],
             ],
@@ -181,28 +182,28 @@ export function SapOne({ className, ...props }: React.ComponentProps<"div">) {
           connections={{
             right: [
               [
-                { dir: "ltr", active: false },
-                { dir: "ltr", active: false },
-                { dir: "ltr", active: false },
-                { dir: "ltr", active: false },
-                { dir: "ltr", active: false },
-                { dir: "ltr", active: false },
-                { dir: "ltr", active: false },
-                { dir: "ltr", active: false },
+                { dir: "ltr", active: isBitSet(bus, 7) },
+                { dir: "ltr", active: isBitSet(bus, 6) },
+                { dir: "ltr", active: isBitSet(bus, 5) },
+                { dir: "ltr", active: isBitSet(bus, 4) },
+                { dir: "ltr", active: isBitSet(bus, 3) },
+                { dir: "ltr", active: isBitSet(bus, 2) },
+                { dir: "ltr", active: isBitSet(bus, 1) },
+                { dir: "ltr", active: isBitSet(bus, 0) },
               ],
               [
-                { dir: "rtl", active: false },
-                { dir: "rtl", active: false },
-                { dir: "rtl", active: false },
-                { dir: "rtl", active: false },
+                { dir: "rtl", active: isBitSet(iRegister, 3) },
+                { dir: "rtl", active: isBitSet(iRegister, 2) },
+                { dir: "rtl", active: isBitSet(iRegister, 1) },
+                { dir: "rtl", active: isBitSet(iRegister, 0) },
               ],
             ],
             bottom: [
               [
-                { dir: "ttb", active: false },
-                { dir: "ttb", active: false },
-                { dir: "ttb", active: false },
-                { dir: "ttb", active: false },
+                { dir: "ttb", active: isBitSet(iRegister, 3) },
+                { dir: "ttb", active: isBitSet(iRegister, 2) },
+                { dir: "ttb", active: isBitSet(iRegister, 1) },
+                { dir: "ttb", active: isBitSet(iRegister, 0) },
               ],
             ],
             left: [
@@ -215,7 +216,7 @@ export function SapOne({ className, ...props }: React.ComponentProps<"div">) {
                     </>
                   ),
                   dir: "ltr",
-                  active: !instructions.load,
+                  active: !signals.Li,
                 },
               ],
               [
@@ -237,7 +238,7 @@ export function SapOne({ className, ...props }: React.ComponentProps<"div">) {
                     </>
                   ),
                   dir: "ltr",
-                  active: !instructions.enabled,
+                  active: !signals.Ei,
                 },
               ],
             ],
@@ -276,7 +277,7 @@ export function SapOne({ className, ...props }: React.ComponentProps<"div">) {
                     </>
                   ),
                   dir: "btt",
-                  active: counter.load,
+                  active: signals.Cp,
                 },
                 {
                   label: (
@@ -285,7 +286,7 @@ export function SapOne({ className, ...props }: React.ComponentProps<"div">) {
                     </>
                   ),
                   dir: "btt",
-                  active: counter.enabled,
+                  active: signals.Ep,
                 },
                 {
                   label: (
@@ -295,12 +296,12 @@ export function SapOne({ className, ...props }: React.ComponentProps<"div">) {
                     </>
                   ),
                   dir: "btt",
-                  active: !input.load,
+                  active: !signals.Lm,
                 },
                 {
                   label: <span className="overline">CE</span>,
                   dir: "btt",
-                  active: !memory.enabled,
+                  active: !signals.CE,
                 },
                 {
                   label: (
@@ -310,7 +311,7 @@ export function SapOne({ className, ...props }: React.ComponentProps<"div">) {
                     </>
                   ),
                   dir: "btt",
-                  active: !instructions.load,
+                  active: !signals.Li,
                 },
                 {
                   label: (
@@ -320,7 +321,7 @@ export function SapOne({ className, ...props }: React.ComponentProps<"div">) {
                     </>
                   ),
                   dir: "btt",
-                  active: !instructions.enabled,
+                  active: !signals.Ei,
                 },
                 {
                   label: (
@@ -330,7 +331,7 @@ export function SapOne({ className, ...props }: React.ComponentProps<"div">) {
                     </>
                   ),
                   dir: "btt",
-                  active: !accumulator.load,
+                  active: !signals.La,
                 },
                 {
                   label: (
@@ -339,7 +340,7 @@ export function SapOne({ className, ...props }: React.ComponentProps<"div">) {
                     </>
                   ),
                   dir: "btt",
-                  active: accumulator.enabled,
+                  active: signals.Ea,
                 },
                 {
                   label: (
@@ -348,7 +349,7 @@ export function SapOne({ className, ...props }: React.ComponentProps<"div">) {
                     </>
                   ),
                   dir: "btt",
-                  active: unit.subtraction,
+                  active: signals.Su,
                 },
                 {
                   label: (
@@ -357,7 +358,7 @@ export function SapOne({ className, ...props }: React.ComponentProps<"div">) {
                     </>
                   ),
                   dir: "btt",
-                  active: unit.enable,
+                  active: signals.Eu,
                 },
                 {
                   label: (
@@ -367,7 +368,7 @@ export function SapOne({ className, ...props }: React.ComponentProps<"div">) {
                     </>
                   ),
                   dir: "btt",
-                  active: !register.load,
+                  active: !signals.Lb,
                 },
                 {
                   label: (
@@ -377,7 +378,7 @@ export function SapOne({ className, ...props }: React.ComponentProps<"div">) {
                     </>
                   ),
                   dir: "btt",
-                  active: !output.load,
+                  active: !signals.Lo,
                 },
               ],
             ],
@@ -387,7 +388,7 @@ export function SapOne({ className, ...props }: React.ComponentProps<"div">) {
 
       <div
         className="bg-muted data-[active=true]:bg-primary left-1/2 z-10 -mx-4 h-[694px] w-4 rounded-xs border"
-        data-active={false}
+        data-active={bus > 0}
       />
 
       <div className="flex w-fit flex-col">
@@ -408,7 +409,7 @@ export function SapOne({ className, ...props }: React.ComponentProps<"div">) {
                     </>
                   ),
                   dir: "rtl",
-                  active: !accumulator.load,
+                  active: !signals.La,
                 },
               ],
               [
@@ -426,42 +427,42 @@ export function SapOne({ className, ...props }: React.ComponentProps<"div">) {
                     </>
                   ),
                   dir: "rtl",
-                  active: accumulator.enabled,
+                  active: signals.Ea,
                 },
               ],
             ],
             left: [
               [
-                { dir: "ltr", active: false },
-                { dir: "ltr", active: false },
-                { dir: "ltr", active: false },
-                { dir: "ltr", active: false },
-                { dir: "ltr", active: false },
-                { dir: "ltr", active: false },
-                { dir: "ltr", active: false },
-                { dir: "ltr", active: false },
+                { dir: "ltr", active: isBitSet(bus, 7) },
+                { dir: "ltr", active: isBitSet(bus, 6) },
+                { dir: "ltr", active: isBitSet(bus, 5) },
+                { dir: "ltr", active: isBitSet(bus, 4) },
+                { dir: "ltr", active: isBitSet(bus, 3) },
+                { dir: "ltr", active: isBitSet(bus, 2) },
+                { dir: "ltr", active: isBitSet(bus, 1) },
+                { dir: "ltr", active: isBitSet(bus, 0) },
               ],
               [
-                { dir: "ltr", active: false },
-                { dir: "ltr", active: false },
-                { dir: "ltr", active: false },
-                { dir: "ltr", active: false },
-                { dir: "ltr", active: false },
-                { dir: "ltr", active: false },
-                { dir: "ltr", active: false },
-                { dir: "ltr", active: false },
+                { dir: "ltr", active: isBitSet(accumulator, 7) },
+                { dir: "ltr", active: isBitSet(accumulator, 6) },
+                { dir: "ltr", active: isBitSet(accumulator, 5) },
+                { dir: "ltr", active: isBitSet(accumulator, 4) },
+                { dir: "ltr", active: isBitSet(accumulator, 3) },
+                { dir: "ltr", active: isBitSet(accumulator, 2) },
+                { dir: "ltr", active: isBitSet(accumulator, 1) },
+                { dir: "ltr", active: isBitSet(accumulator, 0) },
               ],
             ],
             bottom: [
               [
-                { dir: "ttb", active: false },
-                { dir: "ttb", active: false },
-                { dir: "ttb", active: false },
-                { dir: "ttb", active: false },
-                { dir: "ttb", active: false },
-                { dir: "ttb", active: false },
-                { dir: "ttb", active: false },
-                { dir: "ttb", active: false },
+                { dir: "ttb", active: isBitSet(accumulator, 7) },
+                { dir: "ttb", active: isBitSet(accumulator, 6) },
+                { dir: "ttb", active: isBitSet(accumulator, 5) },
+                { dir: "ttb", active: isBitSet(accumulator, 4) },
+                { dir: "ttb", active: isBitSet(accumulator, 3) },
+                { dir: "ttb", active: isBitSet(accumulator, 2) },
+                { dir: "ttb", active: isBitSet(accumulator, 1) },
+                { dir: "ttb", active: isBitSet(accumulator, 0) },
               ],
             ],
           }}
@@ -483,7 +484,7 @@ export function SapOne({ className, ...props }: React.ComponentProps<"div">) {
                     </>
                   ),
                   dir: "rtl",
-                  active: unit.subtraction,
+                  active: signals.Su,
                 },
               ],
               [
@@ -494,32 +495,32 @@ export function SapOne({ className, ...props }: React.ComponentProps<"div">) {
                     </>
                   ),
                   dir: "rtl",
-                  active: unit.enable,
+                  active: signals.Eu,
                 },
               ],
             ],
             left: [
               [
-                { dir: "ltr", active: false },
-                { dir: "ltr", active: false },
-                { dir: "ltr", active: false },
-                { dir: "ltr", active: false },
-                { dir: "ltr", active: false },
-                { dir: "ltr", active: false },
-                { dir: "ltr", active: false },
-                { dir: "ltr", active: false },
+                { dir: "ltr", active: isBitSet(bus, 7) },
+                { dir: "ltr", active: isBitSet(bus, 6) },
+                { dir: "ltr", active: isBitSet(bus, 5) },
+                { dir: "ltr", active: isBitSet(bus, 4) },
+                { dir: "ltr", active: isBitSet(bus, 3) },
+                { dir: "ltr", active: isBitSet(bus, 2) },
+                { dir: "ltr", active: isBitSet(bus, 1) },
+                { dir: "ltr", active: isBitSet(bus, 0) },
               ],
             ],
             bottom: [
               [
-                { dir: "ttb", active: false },
-                { dir: "ttb", active: false },
-                { dir: "ttb", active: false },
-                { dir: "ttb", active: false },
-                { dir: "ttb", active: false },
-                { dir: "ttb", active: false },
-                { dir: "ttb", active: false },
-                { dir: "ttb", active: false },
+                { dir: "ttb", active: isBitSet(bRegister, 7) },
+                { dir: "ttb", active: isBitSet(bRegister, 6) },
+                { dir: "ttb", active: isBitSet(bRegister, 5) },
+                { dir: "ttb", active: isBitSet(bRegister, 4) },
+                { dir: "ttb", active: isBitSet(bRegister, 3) },
+                { dir: "ttb", active: isBitSet(bRegister, 2) },
+                { dir: "ttb", active: isBitSet(bRegister, 1) },
+                { dir: "ttb", active: isBitSet(bRegister, 0) },
               ],
             ],
           }}
@@ -543,7 +544,7 @@ export function SapOne({ className, ...props }: React.ComponentProps<"div">) {
                     </>
                   ),
                   dir: "rtl",
-                  active: !register.load,
+                  active: !signals.Lb,
                 },
               ],
               [
@@ -556,14 +557,14 @@ export function SapOne({ className, ...props }: React.ComponentProps<"div">) {
             ],
             left: [
               [
-                { dir: "ltr", active: false },
-                { dir: "ltr", active: false },
-                { dir: "ltr", active: false },
-                { dir: "ltr", active: false },
-                { dir: "ltr", active: false },
-                { dir: "ltr", active: false },
-                { dir: "ltr", active: false },
-                { dir: "ltr", active: false },
+                { dir: "ltr", active: isBitSet(bus, 7) },
+                { dir: "ltr", active: isBitSet(bus, 6) },
+                { dir: "ltr", active: isBitSet(bus, 5) },
+                { dir: "ltr", active: isBitSet(bus, 4) },
+                { dir: "ltr", active: isBitSet(bus, 3) },
+                { dir: "ltr", active: isBitSet(bus, 2) },
+                { dir: "ltr", active: isBitSet(bus, 1) },
+                { dir: "ltr", active: isBitSet(bus, 0) },
               ],
             ],
           }}
@@ -586,7 +587,7 @@ export function SapOne({ className, ...props }: React.ComponentProps<"div">) {
                     </>
                   ),
                   dir: "rtl",
-                  active: !output.load,
+                  active: !signals.Lo,
                 },
               ],
               [
@@ -599,34 +600,34 @@ export function SapOne({ className, ...props }: React.ComponentProps<"div">) {
             ],
             bottom: [
               [
-                { dir: "ttb", active: false },
-                { dir: "ttb", active: false },
-                { dir: "ttb", active: false },
-                { dir: "ttb", active: false },
-                { dir: "ttb", active: false },
-                { dir: "ttb", active: false },
-                { dir: "ttb", active: false },
-                { dir: "ttb", active: false },
+                { dir: "ttb", active: isBitSet(output, 7) },
+                { dir: "ttb", active: isBitSet(output, 6) },
+                { dir: "ttb", active: isBitSet(output, 5) },
+                { dir: "ttb", active: isBitSet(output, 4) },
+                { dir: "ttb", active: isBitSet(output, 3) },
+                { dir: "ttb", active: isBitSet(output, 2) },
+                { dir: "ttb", active: isBitSet(output, 1) },
+                { dir: "ttb", active: isBitSet(output, 0) },
               ],
             ],
             left: [
               [
-                { dir: "ltr", active: false },
-                { dir: "ltr", active: false },
-                { dir: "ltr", active: false },
-                { dir: "ltr", active: false },
-                { dir: "ltr", active: false },
-                { dir: "ltr", active: false },
-                { dir: "ltr", active: false },
-                { dir: "ltr", active: false },
+                { dir: "ltr", active: isBitSet(bus, 7) },
+                { dir: "ltr", active: isBitSet(bus, 6) },
+                { dir: "ltr", active: isBitSet(bus, 5) },
+                { dir: "ltr", active: isBitSet(bus, 4) },
+                { dir: "ltr", active: isBitSet(bus, 3) },
+                { dir: "ltr", active: isBitSet(bus, 2) },
+                { dir: "ltr", active: isBitSet(bus, 1) },
+                { dir: "ltr", active: isBitSet(bus, 0) },
               ],
             ],
           }}
         />
 
         <Card className="mx-auto flex h-full w-64 flex-row items-center justify-center p-4">
-          <Display digit={0} />
-          <Display digit={0} />
+          <Display digit={0x0} />
+          <Display digit={0x0} />
         </Card>
       </div>
     </div>
