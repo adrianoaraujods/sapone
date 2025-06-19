@@ -19,14 +19,18 @@ export const CONTROL_MASKS = {
 export type ControlSignals = { [sc in keyof typeof CONTROL_MASKS]: boolean };
 
 export const OPERATIONS = {
-  NOP: 0x0,
-  LDA: 0x1,
-  ADD: 0x2,
-  SUB: 0x3,
+  // NOP: 0x0,
+  LDA: 0x0,
+  ADD: 0x1,
+  SUB: 0x2,
+  // ...
+  // SAMPLE OPCODES
+  STO: 0x3,
+  JMP: 0x4,
   // ...
   OUT: 0xe,
   HLT: 0xf,
-} as const;
+};
 
 export type Operation = keyof typeof OPERATIONS;
 
@@ -45,6 +49,7 @@ export type System = {
   clock: boolean;
   clear: boolean;
   running: boolean;
+  halted: boolean;
   flags: SystemFlag;
   tState: TState;
 
@@ -72,6 +77,7 @@ export const initialSystem: System = {
   clock: false,
   clear: false,
   running: false,
+  halted: false,
   flags: {},
   tState: 1,
 
