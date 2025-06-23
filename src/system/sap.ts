@@ -2,11 +2,12 @@ import {
   CONTROL_MASKS,
   getControlSignals,
   initialSystem,
-  OPERATIONS,
   TState,
 } from "@/lib/system";
 
+
 import type { SystemComponent } from "@/lib/system";
+import { OPERATIONS } from "@/types/instructions";
 
 const FETCH_CYCLE = [
   CONTROL_MASKS.Ep | CONTROL_MASKS.Lm, // T1: PC out -> MAR in

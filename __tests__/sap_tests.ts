@@ -1,17 +1,18 @@
 import "@/tests/util/match-media.mock";
 
-import { initialSystem, OPERATIONS } from "@/lib/system";
+import { initialSystem } from "@/lib/system";
+
 import {
   runClock,
   runProgramAsync,
   runProgramWithClock,
   setMemory,
   setMemorySingle,
-  systemAndMemoryReset,
-  systemReset,
+  systemReset
 } from "@/system/sap";
 
 import type { System, SystemComponent } from "@/lib/system.ts";
+import { OPERATIONS } from "@/types/instructions";
 
 describe("Testing SAP-1 System", () => {
   let component: {

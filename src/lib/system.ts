@@ -1,3 +1,4 @@
+import { OPERATIONS } from "@/types/instructions";
 import type { Dispatch } from "react";
 
 export const CONTROL_MASKS = {
@@ -18,19 +19,7 @@ export const CONTROL_MASKS = {
 
 export type ControlSignals = { [sc in keyof typeof CONTROL_MASKS]: boolean };
 
-export const OPERATIONS = {
-  // NOP: 0x0,
-  LDA: 0x0,
-  ADD: 0x1,
-  SUB: 0x2,
-  // ...
-  // SAMPLE OPCODES
-  STO: 0x3,
-  JMP: 0x4,
-  // ...
-  OUT: 0xe,
-  HLT: 0xf,
-};
+
 
 export type Operation = keyof typeof OPERATIONS;
 
