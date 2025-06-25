@@ -37,7 +37,7 @@ const wireVariants = cva<{
 
 const labelVariants = cva<{
   dir: { [dir in Direction]: string };
-}>("", {
+}>("font-mono", {
   variants: {
     dir: {
       ltr: "w-6 h-4",

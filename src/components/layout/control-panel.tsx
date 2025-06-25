@@ -126,27 +126,32 @@ export function ControlPanel() {
                 })),
               });
             }}
+            disabled={isRunning}
           >
             <MemoryStickIcon />
 
             <Text>Gravar Memória</Text>
           </Button>
 
-          <Button
-            variant="secondary"
-            onClick={() => runClock({ system, update: setSystem })}
-            disabled={isRunning}
-          >
-            {isRunning ? (
-              <ClockAlertIcon />
-            ) : system.clock ? (
-              <ClockArrowDownIcon />
-            ) : (
-              <ClockArrowUpIcon />
-            )}
+          <div className="flex flex-col items-center">
+            <Button
+              variant="secondary"
+              onClick={() => runClock({ system, update: setSystem })}
+              disabled={isRunning}
+            >
+              {isRunning ? (
+                <ClockAlertIcon />
+              ) : system.clock ? (
+                <ClockArrowDownIcon />
+              ) : (
+                <ClockArrowUpIcon />
+              )}
 
-            <Text>Clock</Text>
-          </Button>
+              <Text>Clock</Text>
+            </Button>
+
+            <Text variant="muted">Instrução: {system.tState}</Text>
+          </div>
         </div>
 
         <div className="mb-4 flex flex-col gap-3">
@@ -192,9 +197,9 @@ export function ControlPanel() {
       <div className="grid w-fit grid-cols-4 gap-2">
         {system.ram.map((value, i) => (
           <Input
-            className="data-[active=true]:!bg-primary max-w-32 text-center"
+            className="data-[active=true]:!bg-primary max-w-32 text-center font-mono"
             data-active={i === system.memoryAddressRegister}
-            value={value.toString(16).toUpperCase().padStart(2)}
+            value={value.toString(16).toUpperCase().padStart(2, "0")}
             disabled
             key={i}
           />

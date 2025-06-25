@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { Connection } from "@/components/connection";
-import { Card, CardTitle } from "@/components/ui/card";
+import { Card, CardDescription, CardTitle } from "@/components/ui/card";
 
 import type { ConnectionProps } from "@/components/connection";
 
@@ -9,10 +9,12 @@ export type Side = "top" | "right" | "bottom" | "left";
 
 export type SystemComponentProps = {
   label?: React.ReactNode;
+  value?: string;
   connections: { [dir in Side]?: ConnectionProps[][] };
 };
 
 export function SystemComponent({
+  value,
   label,
   connections: { top, right, bottom, left },
   ...props
@@ -43,8 +45,14 @@ export function SystemComponent({
             ))}
         </div>
 
-        <Card className="h-full w-64 p-4">
+        <Card className="relative flex h-full w-64 items-center justify-center gap-0 p-4">
           <CardTitle className="my-auto text-center">{label}</CardTitle>
+
+          {value && (
+            <CardDescription className="font-mono">
+              ({value.toUpperCase()})
+            </CardDescription>
+          )}
         </Card>
 
         <div className="flex flex-col gap-8 py-4">

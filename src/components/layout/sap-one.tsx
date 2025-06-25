@@ -7,19 +7,27 @@ import { getControlSignals, isBitSet } from "@/lib/system";
 import { cn } from "@/lib/utils";
 import { Display } from "@/components/display";
 import { SystemComponent } from "@/components/layout/system-component";
+import { Text } from "@/components/typography/text";
 import { Card } from "@/components/ui/card";
 
 export function SapOne({ className, ...props }: React.ComponentProps<"div">) {
   const {
     system: {
+      accumulator,
       bRegister,
       bus,
       clear,
       clock,
       controlWord,
+      flags,
+      halted,
       iRegister,
       memoryAddressRegister,
       output,
+      programCounter,
+      ram,
+      running,
+      tState,
       unit,
     },
   } = useSystem();
@@ -37,6 +45,7 @@ export function SapOne({ className, ...props }: React.ComponentProps<"div">) {
                 Contador de <br /> Programa
               </>
             }
+            value={programCounter.toString(16)}
             connections={{
               right: [
                 [
@@ -101,6 +110,7 @@ export function SapOne({ className, ...props }: React.ComponentProps<"div">) {
                 Entrada <br /> e REM
               </>
             }
+            value={memoryAddressRegister.toString(16)}
             connections={{
               right: [
                 [
@@ -210,6 +220,7 @@ export function SapOne({ className, ...props }: React.ComponentProps<"div">) {
                 Registrador de <br /> Instruções
               </>
             }
+            value={iRegister.toString(16)}
             connections={{
               right: [
                 [
@@ -417,10 +428,16 @@ export function SapOne({ className, ...props }: React.ComponentProps<"div">) {
           />
         </div>
 
-        <div
-          className="bg-muted data-[active=true]:bg-primary left-1/2 z-10 -mx-4 h-[694px] w-4 rounded-xs border"
-          data-active={bus > 0}
-        />
+        <div className="-mr-4 -ml-16 flex h-[694px] items-end">
+          <Text className="w-12 font-mono">
+            ({bus.toString(16).padStart(2, "0")})
+          </Text>
+
+          <div
+            className="bg-muted data-[active=true]:bg-primary left-1/2 z-10 h-full w-4 rounded-xs border"
+            data-active={bus > 0}
+          />
+        </div>
 
         <div className="flex w-fit flex-col">
           <SystemComponent
@@ -429,6 +446,7 @@ export function SapOne({ className, ...props }: React.ComponentProps<"div">) {
                 Acumulador <br /> (A)
               </>
             }
+            value={accumulator.toString(16)}
             connections={{
               right: [
                 [
@@ -529,6 +547,7 @@ export function SapOne({ className, ...props }: React.ComponentProps<"div">) {
                 Somador / <br /> Subtrator
               </>
             }
+            value={unit.toString(16)}
             connections={{
               right: [
                 [
@@ -576,6 +595,7 @@ export function SapOne({ className, ...props }: React.ComponentProps<"div">) {
                 Registrador <br /> (B)
               </>
             }
+            value={bRegister.toString(16)}
             connections={{
               top: [
                 [
@@ -631,6 +651,7 @@ export function SapOne({ className, ...props }: React.ComponentProps<"div">) {
                 Registrador <br /> de saída
               </>
             }
+            value={output.toString(16)}
             connections={{
               right: [
                 [
