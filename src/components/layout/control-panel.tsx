@@ -193,7 +193,7 @@ export function ControlPanel() {
         {system.ram.map((value, i) => (
           <Input
             className="max-w-32 text-center"
-            value={value.toString(2)}
+            value={value.toString(16).toUpperCase()}
             disabled
             key={i}
           />
