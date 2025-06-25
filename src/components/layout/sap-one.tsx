@@ -12,20 +12,14 @@ import { Card } from "@/components/ui/card";
 export function SapOne({ className, ...props }: React.ComponentProps<"div">) {
   const {
     system: {
-      accumulator,
       bRegister,
       bus,
       clear,
       clock,
       controlWord,
-      flags,
       iRegister,
       memoryAddressRegister,
       output,
-      programCounter,
-      ram,
-      running,
-      tState,
       unit,
     },
   } = useSystem();
@@ -46,10 +40,22 @@ export function SapOne({ className, ...props }: React.ComponentProps<"div">) {
             connections={{
               right: [
                 [
-                  { dir: "ltr", active: isBitSet(programCounter, 3) },
-                  { dir: "ltr", active: isBitSet(programCounter, 2) },
-                  { dir: "ltr", active: isBitSet(programCounter, 1) },
-                  { dir: "ltr", active: isBitSet(programCounter, 0) },
+                  {
+                    dir: "ltr",
+                    active: signals.Ep && isBitSet(bus, 3),
+                  },
+                  {
+                    dir: "ltr",
+                    active: signals.Ep && isBitSet(bus, 2),
+                  },
+                  {
+                    dir: "ltr",
+                    active: signals.Ep && isBitSet(bus, 1),
+                  },
+                  {
+                    dir: "ltr",
+                    active: signals.Ep && isBitSet(bus, 0),
+                  },
                 ],
               ],
               left: [
@@ -98,24 +104,48 @@ export function SapOne({ className, ...props }: React.ComponentProps<"div">) {
             connections={{
               right: [
                 [
-                  { dir: "rtl", active: isBitSet(bus, 3) },
-                  { dir: "rtl", active: isBitSet(bus, 2) },
-                  { dir: "rtl", active: isBitSet(bus, 1) },
-                  { dir: "rtl", active: isBitSet(bus, 0) },
+                  { dir: "rtl", active: signals.Lm && isBitSet(bus, 3) },
+                  { dir: "rtl", active: signals.Lm && isBitSet(bus, 2) },
+                  { dir: "rtl", active: signals.Lm && isBitSet(bus, 1) },
+                  { dir: "rtl", active: signals.Lm && isBitSet(bus, 0) },
                 ],
               ],
               bottom: [
                 [
-                  { dir: "ttb", active: isBitSet(memoryAddressRegister, 7) },
-                  { dir: "ttb", active: isBitSet(memoryAddressRegister, 6) },
-                  { dir: "ttb", active: isBitSet(memoryAddressRegister, 5) },
-                  { dir: "ttb", active: isBitSet(memoryAddressRegister, 4) },
+                  {
+                    dir: "ttb",
+                    active: signals.CE && isBitSet(memoryAddressRegister, 7),
+                  },
+                  {
+                    dir: "ttb",
+                    active: signals.CE && isBitSet(memoryAddressRegister, 6),
+                  },
+                  {
+                    dir: "ttb",
+                    active: signals.CE && isBitSet(memoryAddressRegister, 5),
+                  },
+                  {
+                    dir: "ttb",
+                    active: signals.CE && isBitSet(memoryAddressRegister, 4),
+                  },
                 ],
                 [
-                  { dir: "ttb", active: isBitSet(memoryAddressRegister, 3) },
-                  { dir: "ttb", active: isBitSet(memoryAddressRegister, 2) },
-                  { dir: "ttb", active: isBitSet(memoryAddressRegister, 1) },
-                  { dir: "ttb", active: isBitSet(memoryAddressRegister, 0) },
+                  {
+                    dir: "ttb",
+                    active: signals.CE && isBitSet(memoryAddressRegister, 3),
+                  },
+                  {
+                    dir: "ttb",
+                    active: signals.CE && isBitSet(memoryAddressRegister, 2),
+                  },
+                  {
+                    dir: "ttb",
+                    active: signals.CE && isBitSet(memoryAddressRegister, 1),
+                  },
+                  {
+                    dir: "ttb",
+                    active: signals.CE && isBitSet(memoryAddressRegister, 0),
+                  },
                 ],
               ],
               left: [
@@ -152,14 +182,14 @@ export function SapOne({ className, ...props }: React.ComponentProps<"div">) {
             connections={{
               right: [
                 [
-                  { dir: "rtl", active: isBitSet(bus, 7) },
-                  { dir: "rtl", active: isBitSet(bus, 6) },
-                  { dir: "rtl", active: isBitSet(bus, 5) },
-                  { dir: "rtl", active: isBitSet(bus, 4) },
-                  { dir: "rtl", active: isBitSet(bus, 3) },
-                  { dir: "rtl", active: isBitSet(bus, 2) },
-                  { dir: "rtl", active: isBitSet(bus, 1) },
-                  { dir: "rtl", active: isBitSet(bus, 0) },
+                  { dir: "rtl", active: signals.CE && isBitSet(bus, 7) },
+                  { dir: "rtl", active: signals.CE && isBitSet(bus, 6) },
+                  { dir: "rtl", active: signals.CE && isBitSet(bus, 5) },
+                  { dir: "rtl", active: signals.CE && isBitSet(bus, 4) },
+                  { dir: "rtl", active: signals.CE && isBitSet(bus, 3) },
+                  { dir: "rtl", active: signals.CE && isBitSet(bus, 2) },
+                  { dir: "rtl", active: signals.CE && isBitSet(bus, 1) },
+                  { dir: "rtl", active: signals.CE && isBitSet(bus, 0) },
                 ],
               ],
               left: [
@@ -183,28 +213,28 @@ export function SapOne({ className, ...props }: React.ComponentProps<"div">) {
             connections={{
               right: [
                 [
-                  { dir: "ltr", active: isBitSet(bus, 7) },
-                  { dir: "ltr", active: isBitSet(bus, 6) },
-                  { dir: "ltr", active: isBitSet(bus, 5) },
-                  { dir: "ltr", active: isBitSet(bus, 4) },
-                  { dir: "ltr", active: isBitSet(bus, 3) },
-                  { dir: "ltr", active: isBitSet(bus, 2) },
-                  { dir: "ltr", active: isBitSet(bus, 1) },
-                  { dir: "ltr", active: isBitSet(bus, 0) },
+                  { dir: "ltr", active: signals.Li && isBitSet(bus, 7) },
+                  { dir: "ltr", active: signals.Li && isBitSet(bus, 6) },
+                  { dir: "ltr", active: signals.Li && isBitSet(bus, 5) },
+                  { dir: "ltr", active: signals.Li && isBitSet(bus, 4) },
+                  { dir: "ltr", active: signals.Li && isBitSet(bus, 3) },
+                  { dir: "ltr", active: signals.Li && isBitSet(bus, 2) },
+                  { dir: "ltr", active: signals.Li && isBitSet(bus, 1) },
+                  { dir: "ltr", active: signals.Li && isBitSet(bus, 0) },
                 ],
                 [
-                  { dir: "rtl", active: isBitSet(iRegister, 3) },
-                  { dir: "rtl", active: isBitSet(iRegister, 2) },
-                  { dir: "rtl", active: isBitSet(iRegister, 1) },
-                  { dir: "rtl", active: isBitSet(iRegister, 0) },
+                  { dir: "rtl", active: signals.Ei && isBitSet(iRegister, 3) },
+                  { dir: "rtl", active: signals.Ei && isBitSet(iRegister, 2) },
+                  { dir: "rtl", active: signals.Ei && isBitSet(iRegister, 1) },
+                  { dir: "rtl", active: signals.Ei && isBitSet(iRegister, 0) },
                 ],
               ],
               bottom: [
                 [
-                  { dir: "ttb", active: isBitSet(iRegister, 3) },
-                  { dir: "ttb", active: isBitSet(iRegister, 2) },
-                  { dir: "ttb", active: isBitSet(iRegister, 1) },
-                  { dir: "ttb", active: isBitSet(iRegister, 0) },
+                  { dir: "ttb", active: signals.Ei && isBitSet(iRegister, 3) },
+                  { dir: "ttb", active: signals.Ei && isBitSet(iRegister, 2) },
+                  { dir: "ttb", active: signals.Ei && isBitSet(iRegister, 1) },
+                  { dir: "ttb", active: signals.Ei && isBitSet(iRegister, 0) },
                 ],
               ],
               left: [
@@ -434,36 +464,60 @@ export function SapOne({ className, ...props }: React.ComponentProps<"div">) {
               ],
               left: [
                 [
-                  { dir: "ltr", active: isBitSet(bus, 7) },
-                  { dir: "ltr", active: isBitSet(bus, 6) },
-                  { dir: "ltr", active: isBitSet(bus, 5) },
-                  { dir: "ltr", active: isBitSet(bus, 4) },
-                  { dir: "ltr", active: isBitSet(bus, 3) },
-                  { dir: "ltr", active: isBitSet(bus, 2) },
-                  { dir: "ltr", active: isBitSet(bus, 1) },
-                  { dir: "ltr", active: isBitSet(bus, 0) },
+                  { dir: "ltr", active: signals.La && isBitSet(bus, 7) },
+                  { dir: "ltr", active: signals.La && isBitSet(bus, 6) },
+                  { dir: "ltr", active: signals.La && isBitSet(bus, 5) },
+                  { dir: "ltr", active: signals.La && isBitSet(bus, 4) },
+                  { dir: "ltr", active: signals.La && isBitSet(bus, 3) },
+                  { dir: "ltr", active: signals.La && isBitSet(bus, 2) },
+                  { dir: "ltr", active: signals.La && isBitSet(bus, 1) },
+                  { dir: "ltr", active: signals.La && isBitSet(bus, 0) },
                 ],
                 [
-                  { dir: "ltr", active: isBitSet(accumulator, 7) },
-                  { dir: "ltr", active: isBitSet(accumulator, 6) },
-                  { dir: "ltr", active: isBitSet(accumulator, 5) },
-                  { dir: "ltr", active: isBitSet(accumulator, 4) },
-                  { dir: "ltr", active: isBitSet(accumulator, 3) },
-                  { dir: "ltr", active: isBitSet(accumulator, 2) },
-                  { dir: "ltr", active: isBitSet(accumulator, 1) },
-                  { dir: "ltr", active: isBitSet(accumulator, 0) },
+                  {
+                    dir: "ltr",
+                    active: signals.Ea && isBitSet(bus, 7),
+                  },
+                  {
+                    dir: "ltr",
+                    active: signals.Ea && isBitSet(bus, 6),
+                  },
+                  {
+                    dir: "ltr",
+                    active: signals.Ea && isBitSet(bus, 5),
+                  },
+                  {
+                    dir: "ltr",
+                    active: signals.Ea && isBitSet(bus, 4),
+                  },
+                  {
+                    dir: "ltr",
+                    active: signals.Ea && isBitSet(bus, 3),
+                  },
+                  {
+                    dir: "ltr",
+                    active: signals.Ea && isBitSet(bus, 2),
+                  },
+                  {
+                    dir: "ltr",
+                    active: signals.Ea && isBitSet(bus, 1),
+                  },
+                  {
+                    dir: "ltr",
+                    active: signals.Ea && isBitSet(bus, 0),
+                  },
                 ],
               ],
               bottom: [
                 [
-                  { dir: "ttb", active: isBitSet(unit, 7) },
-                  { dir: "ttb", active: isBitSet(unit, 6) },
-                  { dir: "ttb", active: isBitSet(unit, 5) },
-                  { dir: "ttb", active: isBitSet(unit, 4) },
-                  { dir: "ttb", active: isBitSet(unit, 3) },
-                  { dir: "ttb", active: isBitSet(unit, 2) },
-                  { dir: "ttb", active: isBitSet(unit, 1) },
-                  { dir: "ttb", active: isBitSet(unit, 0) },
+                  { dir: "ttb", active: signals.Eu && isBitSet(unit, 7) },
+                  { dir: "ttb", active: signals.Eu && isBitSet(unit, 6) },
+                  { dir: "ttb", active: signals.Eu && isBitSet(unit, 5) },
+                  { dir: "ttb", active: signals.Eu && isBitSet(unit, 4) },
+                  { dir: "ttb", active: signals.Eu && isBitSet(unit, 3) },
+                  { dir: "ttb", active: signals.Eu && isBitSet(unit, 2) },
+                  { dir: "ttb", active: signals.Eu && isBitSet(unit, 1) },
+                  { dir: "ttb", active: signals.Eu && isBitSet(unit, 0) },
                 ],
               ],
             }}
@@ -502,26 +556,14 @@ export function SapOne({ className, ...props }: React.ComponentProps<"div">) {
               ],
               left: [
                 [
-                  { dir: "ltr", active: isBitSet(bus, 7) },
-                  { dir: "ltr", active: isBitSet(bus, 6) },
-                  { dir: "ltr", active: isBitSet(bus, 5) },
-                  { dir: "ltr", active: isBitSet(bus, 4) },
-                  { dir: "ltr", active: isBitSet(bus, 3) },
-                  { dir: "ltr", active: isBitSet(bus, 2) },
-                  { dir: "ltr", active: isBitSet(bus, 1) },
-                  { dir: "ltr", active: isBitSet(bus, 0) },
-                ],
-              ],
-              bottom: [
-                [
-                  { dir: "ttb", active: isBitSet(bRegister, 7) },
-                  { dir: "ttb", active: isBitSet(bRegister, 6) },
-                  { dir: "ttb", active: isBitSet(bRegister, 5) },
-                  { dir: "ttb", active: isBitSet(bRegister, 4) },
-                  { dir: "ttb", active: isBitSet(bRegister, 3) },
-                  { dir: "ttb", active: isBitSet(bRegister, 2) },
-                  { dir: "ttb", active: isBitSet(bRegister, 1) },
-                  { dir: "ttb", active: isBitSet(bRegister, 0) },
+                  { dir: "ltr", active: signals.Eu && isBitSet(bus, 7) },
+                  { dir: "ltr", active: signals.Eu && isBitSet(bus, 6) },
+                  { dir: "ltr", active: signals.Eu && isBitSet(bus, 5) },
+                  { dir: "ltr", active: signals.Eu && isBitSet(bus, 4) },
+                  { dir: "ltr", active: signals.Eu && isBitSet(bus, 3) },
+                  { dir: "ltr", active: signals.Eu && isBitSet(bus, 2) },
+                  { dir: "ltr", active: signals.Eu && isBitSet(bus, 1) },
+                  { dir: "ltr", active: signals.Eu && isBitSet(bus, 0) },
                 ],
               ],
             }}
@@ -535,6 +577,18 @@ export function SapOne({ className, ...props }: React.ComponentProps<"div">) {
               </>
             }
             connections={{
+              top: [
+                [
+                  { dir: "btt", active: signals.Eu && isBitSet(bRegister, 7) },
+                  { dir: "btt", active: signals.Eu && isBitSet(bRegister, 6) },
+                  { dir: "btt", active: signals.Eu && isBitSet(bRegister, 5) },
+                  { dir: "btt", active: signals.Eu && isBitSet(bRegister, 4) },
+                  { dir: "btt", active: signals.Eu && isBitSet(bRegister, 3) },
+                  { dir: "btt", active: signals.Eu && isBitSet(bRegister, 2) },
+                  { dir: "btt", active: signals.Eu && isBitSet(bRegister, 1) },
+                  { dir: "btt", active: signals.Eu && isBitSet(bRegister, 0) },
+                ],
+              ],
               right: [
                 [
                   {
@@ -558,14 +612,14 @@ export function SapOne({ className, ...props }: React.ComponentProps<"div">) {
               ],
               left: [
                 [
-                  { dir: "ltr", active: isBitSet(bus, 7) },
-                  { dir: "ltr", active: isBitSet(bus, 6) },
-                  { dir: "ltr", active: isBitSet(bus, 5) },
-                  { dir: "ltr", active: isBitSet(bus, 4) },
-                  { dir: "ltr", active: isBitSet(bus, 3) },
-                  { dir: "ltr", active: isBitSet(bus, 2) },
-                  { dir: "ltr", active: isBitSet(bus, 1) },
-                  { dir: "ltr", active: isBitSet(bus, 0) },
+                  { dir: "ltr", active: signals.Lb && isBitSet(bus, 7) },
+                  { dir: "ltr", active: signals.Lb && isBitSet(bus, 6) },
+                  { dir: "ltr", active: signals.Lb && isBitSet(bus, 5) },
+                  { dir: "ltr", active: signals.Lb && isBitSet(bus, 4) },
+                  { dir: "ltr", active: signals.Lb && isBitSet(bus, 3) },
+                  { dir: "ltr", active: signals.Lb && isBitSet(bus, 2) },
+                  { dir: "ltr", active: signals.Lb && isBitSet(bus, 1) },
+                  { dir: "ltr", active: signals.Lb && isBitSet(bus, 0) },
                 ],
               ],
             }}
@@ -613,14 +667,14 @@ export function SapOne({ className, ...props }: React.ComponentProps<"div">) {
               ],
               left: [
                 [
-                  { dir: "ltr", active: isBitSet(bus, 7) },
-                  { dir: "ltr", active: isBitSet(bus, 6) },
-                  { dir: "ltr", active: isBitSet(bus, 5) },
-                  { dir: "ltr", active: isBitSet(bus, 4) },
-                  { dir: "ltr", active: isBitSet(bus, 3) },
-                  { dir: "ltr", active: isBitSet(bus, 2) },
-                  { dir: "ltr", active: isBitSet(bus, 1) },
-                  { dir: "ltr", active: isBitSet(bus, 0) },
+                  { dir: "ltr", active: signals.Lo && isBitSet(bus, 7) },
+                  { dir: "ltr", active: signals.Lo && isBitSet(bus, 6) },
+                  { dir: "ltr", active: signals.Lo && isBitSet(bus, 5) },
+                  { dir: "ltr", active: signals.Lo && isBitSet(bus, 4) },
+                  { dir: "ltr", active: signals.Lo && isBitSet(bus, 3) },
+                  { dir: "ltr", active: signals.Lo && isBitSet(bus, 2) },
+                  { dir: "ltr", active: signals.Lo && isBitSet(bus, 1) },
+                  { dir: "ltr", active: signals.Lo && isBitSet(bus, 0) },
                 ],
               ],
             }}
