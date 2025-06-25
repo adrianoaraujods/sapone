@@ -192,8 +192,9 @@ export function ControlPanel() {
       <div className="grid w-fit grid-cols-4 gap-2">
         {system.ram.map((value, i) => (
           <Input
-            className="max-w-32 text-center"
-            value={value.toString(16).toUpperCase()}
+            className="data-[active=true]:!bg-primary max-w-32 text-center"
+            data-active={i === system.memoryAddressRegister}
+            value={value.toString(16).toUpperCase().padStart(2)}
             disabled
             key={i}
           />
