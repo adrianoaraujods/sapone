@@ -1,13 +1,14 @@
 import {
-  CONTROL_MASKS,
   getControlSignals,
   initialSystem,
-  TState,
+  SystemComponent,
 } from "@/lib/system";
-
-
-import type { SystemComponent } from "@/lib/system";
-import { OPERATIONS } from "@/types/instructions";
+import {
+  CONTROL_MASKS,
+  MemoryValue,
+  OPERATIONS,
+  TState,
+} from "@/types/sap-one";
 
 const FETCH_CYCLE = [
   CONTROL_MASKS.Ep | CONTROL_MASKS.Lm, // T1: PC out -> MAR in
@@ -86,13 +87,6 @@ export function systemReset({ update }: SystemComponent) {
   });
 }
 
-export function systemAndMemoryReset({ update }: SystemComponent) {
-  update(() => {
-    const newSystem = initialSystem;
-    return newSystem;
-  });
-}
-
 export function setMemorySingle(
   { update }: SystemComponent,
   address: number,
@@ -105,10 +99,11 @@ export function setMemorySingle(
   });
 }
 
-export function setMemory(
-  { system, update }: SystemComponent,
-  program: { address: number; data: number }[]
-) {
+export function setMemory({
+  program,
+  system,
+  update,
+}: SystemComponent & { program: MemoryValue[] }) {
   // IMPORTANT: this will always reset the program if we manually change the memory.
   // i also forcibly wrap over 0-15 for address and 0-255 for data.
   systemReset({ system, update });
@@ -255,6 +250,7 @@ function handleFallingEdge({ system, update }: SystemComponent) {
 }
 
 export function runProgramAsync(component: SystemComponent): number {
+  console.log(component.system);
   const { update } = component;
   let currentSystem = component.system;
 
@@ -306,18 +302,18 @@ export function runProgramAsync(component: SystemComponent): number {
 }
 
 // IMPORTANT: double check this ltr
-export function runProgramWithClock(
-  { update }: SystemComponent,
-  clockSpeedHz: number
-): { stop: () => void } {
-  if (clockSpeedHz <= 0) {
+export function runProgramWithClock({
+  clockSpeed,
+  update,
+}: SystemComponent & { clockSpeed: number }): { stop: () => void } {
+  if (clockSpeed <= 0) {
     console.error("Clock speed must be a positive number.");
     return { stop: () => {} };
   }
 
   // runClock => Rising OR Falling.
   // means we need 2 for a single cycle.
-  const halfCycleInterval = 1000 / (clockSpeedHz * 2);
+  const halfCycleInterval = clockSpeed * 2;
 
   let intervalId: NodeJS.Timeout | null = null;
 

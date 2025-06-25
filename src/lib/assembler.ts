@@ -1,35 +1,38 @@
-import { OPERATIONS } from '@/types/instructions';
+import { OPERATIONS } from "@/types/sap-one";
 
-interface ParsedLine {
+import type { MemoryValue } from "@/types/sap-one";
+
+type ParsedLine = {
   address?: number;
   label?: string;
   mnemonic?: string;
   operand?: string | number;
   isData?: boolean;
   originalLine: string;
-}
+};
 
-interface AssemblyResult {
-  program: { address: number; data: number }[];
+type AssemblyResult = {
+  program: MemoryValue[];
   labels: Record<string, number>;
   errors: string[];
-}
+};
 
 function tokenizeLine(line: string): string[] {
-  return line.trim()
+  return line
+    .trim()
     .split(/\s+/)
-    .filter(token => token.length > 0);
+    .filter((token) => token.length > 0);
 }
 
 function isNumeric(str: string): boolean {
-  if (str.startsWith('0x') || str.startsWith('0X')) {
+  if (str.startsWith("0x") || str.startsWith("0X")) {
     return /^0x[0-9a-fA-F]+$/.test(str);
   }
   return /^\d+$/.test(str);
 }
 
 function parseNumber(str: string): number {
-  if (str.startsWith('0x') || str.startsWith('0X')) {
+  if (str.startsWith("0x") || str.startsWith("0X")) {
     return parseInt(str, 16);
   }
   return parseInt(str, 10);
@@ -39,9 +42,12 @@ function isValidMnemonic(mnemonic: string): boolean {
   return Object.keys(OPERATIONS).includes(mnemonic.toUpperCase());
 }
 
-function parseLine(line: string, lineNumber: number): { parsed: ParsedLine; error?: string } {
-  const cleanLine = line.split(';')[0].trim();
-  
+function parseLine(
+  line: string,
+  lineNumber: number
+): { parsed: ParsedLine; error?: string } {
+  const cleanLine = line.split(";")[0].trim();
+
   if (!cleanLine) {
     return { parsed: { originalLine: line } };
   }
@@ -49,7 +55,7 @@ function parseLine(line: string, lineNumber: number): { parsed: ParsedLine; erro
   const tokens = tokenizeLine(cleanLine);
   const parsed: ParsedLine = { originalLine: line };
 
-  if (tokens[0].endsWith(':')) {
+  if (tokens[0].endsWith(":")) {
     parsed.label = tokens[0].slice(0, -1);
     tokens.shift();
   }
@@ -60,17 +66,23 @@ function parseLine(line: string, lineNumber: number): { parsed: ParsedLine; erro
 
   const firstToken = tokens[0].toUpperCase();
 
-  if (firstToken === 'ORG') {
+  if (firstToken === "ORG") {
     if (tokens.length !== 2 || !isNumeric(tokens[1])) {
-      return { parsed, error: `Line ${lineNumber}: ORG requires a numeric address` };
+      return {
+        parsed,
+        error: `Line ${lineNumber}: ORG requires a numeric address`,
+      };
     }
     parsed.address = parseNumber(tokens[1]);
     return { parsed };
   }
 
-  if (firstToken === 'DAT') {
+  if (firstToken === "DAT") {
     if (tokens.length !== 2 || !isNumeric(tokens[1])) {
-      return { parsed, error: `Line ${lineNumber}: DAT requires a numeric value` };
+      return {
+        parsed,
+        error: `Line ${lineNumber}: DAT requires a numeric value`,
+      };
     }
     parsed.isData = true;
     parsed.operand = parseNumber(tokens[1]);
@@ -79,17 +91,23 @@ function parseLine(line: string, lineNumber: number): { parsed: ParsedLine; erro
 
   if (isValidMnemonic(firstToken)) {
     parsed.mnemonic = firstToken;
-    
-    if (firstToken === 'HLT' || firstToken === 'OUT') {
+
+    if (firstToken === "HLT" || firstToken === "OUT") {
       if (tokens.length > 1) {
-        return { parsed, error: `Line ${lineNumber}: ${firstToken} takes no operands` };
+        return {
+          parsed,
+          error: `Line ${lineNumber}: ${firstToken} takes no operands`,
+        };
       }
       parsed.operand = 0;
     } else {
       if (tokens.length !== 2) {
-        return { parsed, error: `Line ${lineNumber}: ${firstToken} requires an operand` };
+        return {
+          parsed,
+          error: `Line ${lineNumber}: ${firstToken} requires an operand`,
+        };
       }
-      
+
       if (isNumeric(tokens[1])) {
         parsed.operand = parseNumber(tokens[1]);
       } else {
@@ -99,20 +117,27 @@ function parseLine(line: string, lineNumber: number): { parsed: ParsedLine; erro
     return { parsed };
   }
 
-  return { parsed, error: `Line ${lineNumber}: Unknown instruction or directive '${firstToken}'` };
+  return {
+    parsed,
+    error: `Line ${lineNumber}: Unknown instruction or directive '${firstToken}'`,
+  };
 }
 
-function firstPass(text: string): { lines: ParsedLine[]; labels: Record<string, number>; errors: string[] } {
+function firstPass(text: string): {
+  lines: ParsedLine[];
+  labels: Record<string, number>;
+  errors: string[];
+} {
   const lines: ParsedLine[] = [];
   const labels: Record<string, number> = {};
   const errors: string[] = [];
   let currentAddress = 0;
 
-  const textLines = text.split('\n');
+  const textLines = text.split("\n");
 
   for (let i = 0; i < textLines.length; i++) {
     const { parsed, error } = parseLine(textLines[i], i + 1);
-    
+
     if (error) {
       errors.push(error);
       continue;
@@ -144,7 +169,10 @@ function firstPass(text: string): { lines: ParsedLine[]; labels: Record<string, 
   return { lines, labels, errors };
 }
 
-function secondPass(lines: ParsedLine[], labels: Record<string, number>): { program: { address: number; data: number }[]; errors: string[] } {
+function secondPass(
+  lines: ParsedLine[],
+  labels: Record<string, number>
+): { program: { address: number; data: number }[]; errors: string[] } {
   const program: { address: number; data: number }[] = [];
   const errors: string[] = [];
 
@@ -167,13 +195,13 @@ function secondPass(lines: ParsedLine[], labels: Record<string, number>): { prog
       const opcode = OPERATIONS[line.mnemonic as keyof typeof OPERATIONS];
       let operand = 0;
 
-      if (typeof line.operand === 'string' && line.operand !== '0') {
+      if (typeof line.operand === "string" && line.operand !== "0") {
         if (labels[line.operand] === undefined) {
           errors.push(`Undefined label '${line.operand}'`);
           continue;
         }
         operand = labels[line.operand];
-      } else if (typeof line.operand === 'number') {
+      } else if (typeof line.operand === "number") {
         operand = line.operand;
       }
 
@@ -192,32 +220,35 @@ function secondPass(lines: ParsedLine[], labels: Record<string, number>): { prog
 
 export function assembleProgram(text: string): AssemblyResult {
   if (!text.trim()) {
-    return { program: [], labels: {}, errors: ['Empty input'] };
+    return { program: [], labels: {}, errors: ["Empty input"] };
   }
 
   const { lines, labels, errors: firstPassErrors } = firstPass(text);
-  
+
   if (firstPassErrors.length > 0) {
     return { program: [], labels, errors: firstPassErrors };
   }
 
   const { program, errors: secondPassErrors } = secondPass(lines, labels);
-  
+
   return {
     program: program.sort((a, b) => a.address - b.address),
     labels,
-    errors: secondPassErrors
+    errors: secondPassErrors,
   };
 }
 
-export function formatProgram(program: { address: number; data: number }[]): string {
+export function formatProgram(
+  program: { address: number; data: number }[]
+): string {
   if (program.length === 0) {
-    return 'const program = [];';
+    return "const program = [];";
   }
 
-  const lines = program.map(item => 
-    `  { address: ${item.address}, data: 0x${item.data.toString(16).toUpperCase().padStart(2, '0')} }`
+  const lines = program.map(
+    (item) =>
+      `  { address: ${item.address}, data: 0x${item.data.toString(16).toUpperCase().padStart(2, "0")} }`
   );
 
-  return `const program = [\n${lines.join(',\n')}\n];`;
+  return `const program = [\n${lines.join(",\n")}\n];`;
 }

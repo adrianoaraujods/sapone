@@ -1,45 +1,16 @@
-import { OPERATIONS } from "@/types/instructions";
+import { CONTROL_MASKS } from "@/types/sap-one";
+
+import type { ControlSignals, Flags, TState } from "@/types/sap-one";
 import type { Dispatch } from "react";
 
-export const CONTROL_MASKS = {
-  Cp: 0b100000000000,
-  Ep: 0b010000000000,
-  Lm: 0b001000000000,
-  CE: 0b000100000000,
-  Li: 0b000010000000,
-  Ei: 0b000001000000,
-  La: 0b000000100000,
-  Ea: 0b000000010000,
-  Su: 0b000000001000,
-  Eu: 0b000000000100,
-  Lb: 0b000000000010,
-  Lo: 0b000000000001,
-  Hlt: 0,
-} as const;
-
-export type ControlSignals = { [sc in keyof typeof CONTROL_MASKS]: boolean };
-
-
-
-export type Operation = keyof typeof OPERATIONS;
-
-export type TState = 1 | 2 | 3 | 4 | 5 | 6;
-
-export type RAM = number[];
-
-export type SystemFlag = {
-  carry?: boolean;
-  zero?: boolean;
-};
-
 export type System = {
-  ram: RAM;
+  ram: number[];
   controlWord: number;
   clock: boolean;
   clear: boolean;
   running: boolean;
   halted: boolean;
-  flags: SystemFlag;
+  flags: Flags;
   tState: TState;
 
   // components

@@ -2,25 +2,7 @@ import * as React from "react";
 
 import { Segment } from "@/components/segment";
 
-export type Hex =
-  | 0x0
-  | 0x1
-  | 0x2
-  | 0x3
-  | 0x4
-  | 0x5
-  | 0x6
-  | 0x7
-  | 0x8
-  | 0x9
-  | 0xa
-  | 0xb
-  | 0xc
-  | 0xd
-  | 0xe
-  | 0xf;
-
-export const SEGMENTS_DIGIT_MAP: { [digit in Hex]: string[] } = {
+export const SEGMENTS_DIGIT_MAP: { [key: number]: string[] } = {
   0x0: ["a", "b", "c", "d", "e", "f"],
   0x1: ["b", "c"],
   0x2: ["a", "b", "d", "e", "g"],
@@ -39,7 +21,7 @@ export const SEGMENTS_DIGIT_MAP: { [digit in Hex]: string[] } = {
   0xf: ["a", "e", "f", "g"],
 };
 
-export function Display({ digit }: { digit: Hex }) {
+export function Display({ digit }: { digit: number }) {
   const activeSegments = SEGMENTS_DIGIT_MAP[digit];
 
   return (

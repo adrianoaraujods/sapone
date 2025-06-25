@@ -1,5 +1,8 @@
 "use client";
 
+import { useCallback, useEffect, useState } from "react";
+
+import { assembleProgram, formatProgram } from "@/lib/assembler";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -7,9 +10,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
-import { assembleProgram, formatProgram } from "@/lib/assembler";
+
 import { AlertCircle, CheckCircle, Code2 } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+
+// NOT USED, DELETE FILE
 
 export function AssemblerPanel() {
   const [sourceCode, setSourceCode] = useState(`LDA VALUE1    ; Carrega valor
@@ -32,7 +36,7 @@ VALUE2: DAT 5   ; Define dado 5`);
   }, [handleAssemble, sourceCode]);
 
   return (
-    <Card className="w-full max-w-4xl mx-auto">
+    <Card className="mx-auto w-full max-w-4xl">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Code2 className="h-5 w-5" />
@@ -46,7 +50,10 @@ VALUE2: DAT 5   ; Define dado 5`);
             <TabsTrigger value="output">
               Resultado
               {result.errors.length > 0 && (
-                <Badge variant="destructive" className="ml-2 h-5 w-5 p-0 flex items-center justify-center">
+                <Badge
+                  variant="destructive"
+                  className="ml-2 flex h-5 w-5 items-center justify-center p-0"
+                >
                   {result.errors.length}
                 </Badge>
               )}
@@ -65,7 +72,7 @@ VALUE2: DAT 5   ; Define dado 5`);
               />
             </div>
             <Button onClick={handleAssemble} className="w-full">
-              Gerar Código 
+              Gerar Código
             </Button>
           </TabsContent>
 
@@ -78,9 +85,12 @@ VALUE2: DAT 5   ; Define dado 5`);
                     {result.errors.length} erro(s) encontrado(s)
                   </AlertDescription>
                 </Alert>
-                <ScrollArea className="h-[200px] w-full border rounded-md p-4">
+                <ScrollArea className="h-[200px] w-full rounded-md border p-4">
                   {result.errors.map((error, index) => (
-                    <div key={index} className="text-sm text-red-600 mb-1 font-mono">
+                    <div
+                      key={index}
+                      className="mb-1 font-mono text-sm text-red-600"
+                    >
                       {error}
                     </div>
                   ))}
@@ -90,7 +100,8 @@ VALUE2: DAT 5   ; Define dado 5`);
               <Alert>
                 <CheckCircle className="h-4 w-4" />
                 <AlertDescription>
-                  Assemblagem bem-sucedida! {result.program.length} instrução(ões) gerada(s).
+                  Assemblagem bem-sucedida! {result.program.length}{" "}
+                  instrução(ões) gerada(s).
                 </AlertDescription>
               </Alert>
             )}
@@ -100,7 +111,11 @@ VALUE2: DAT 5   ; Define dado 5`);
                 <h4 className="text-sm font-medium">Labels Identificados</h4>
                 <div className="flex flex-wrap gap-2">
                   {Object.entries(result.labels).map(([label, address]) => (
-                    <Badge key={label} variant="secondary" className="font-mono">
+                    <Badge
+                      key={label}
+                      variant="secondary"
+                      className="font-mono"
+                    >
                       {label}: {address}
                     </Badge>
                   ))}
@@ -111,14 +126,21 @@ VALUE2: DAT 5   ; Define dado 5`);
             {result.program.length > 0 && (
               <div className="space-y-2">
                 <h4 className="text-sm font-medium">Programa Gerado</h4>
-                <ScrollArea className="h-[200px] w-full border rounded-md">
-                  <div className="p-4 space-y-1">
+                <ScrollArea className="h-[200px] w-full rounded-md border">
+                  <div className="space-y-1 p-4">
                     {result.program.map((instruction, index) => (
-                      <div key={index} className="text-sm font-mono flex justify-between">
+                      <div
+                        key={index}
+                        className="flex justify-between font-mono text-sm"
+                      >
                         <span>Endereço {instruction.address}:</span>
                         <span className="text-blue-600">
-                          0x{instruction.data.toString(16).toUpperCase().padStart(2, '0')}
-                          <span className="text-gray-500 ml-2">
+                          0x
+                          {instruction.data
+                            .toString(16)
+                            .toUpperCase()
+                            .padStart(2, "0")}
+                          <span className="ml-2 text-gray-500">
                             ({instruction.data})
                           </span>
                         </span>
@@ -133,9 +155,11 @@ VALUE2: DAT 5   ; Define dado 5`);
           <TabsContent value="program" className="space-y-4">
             {result.program.length > 0 ? (
               <div className="space-y-2">
-                <h4 className="text-sm font-medium">Código TypeScript Gerado</h4>
-                <ScrollArea className="h-[300px] w-full border rounded-md">
-                  <pre className="p-4 text-sm font-mono whitespace-pre-wrap">
+                <h4 className="text-sm font-medium">
+                  Código TypeScript Gerado
+                </h4>
+                <ScrollArea className="h-[300px] w-full rounded-md border">
+                  <pre className="p-4 font-mono text-sm whitespace-pre-wrap">
                     {formatProgram(result.program)}
                   </pre>
                 </ScrollArea>
@@ -144,7 +168,8 @@ VALUE2: DAT 5   ; Define dado 5`);
               <Alert>
                 <AlertCircle className="h-4 w-4" />
                 <AlertDescription>
-                  Nenhum programa válido para exibir. Corrija os erros no código assembly.
+                  Nenhum programa válido para exibir. Corrija os erros no código
+                  assembly.
                 </AlertDescription>
               </Alert>
             )}

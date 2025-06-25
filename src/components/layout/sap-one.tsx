@@ -2,15 +2,12 @@
 
 import * as React from "react";
 
-import { Display } from "@/components/display";
-import { SystemComponent } from "@/components/system-component";
-import { Card } from "@/components/ui/card";
 import { useSystem } from "@/hooks/use-system";
 import { getControlSignals, isBitSet } from "@/lib/system";
 import { cn } from "@/lib/utils";
-import { AssemblerPanel } from "./assembler-panel";
-
-import type { Hex } from "@/components/display";
+import { Display } from "@/components/display";
+import { SystemComponent } from "@/components/layout/system-component";
+import { Card } from "@/components/ui/card";
 
 export function SapOne({ className, ...props }: React.ComponentProps<"div">) {
   const {
@@ -37,7 +34,6 @@ export function SapOne({ className, ...props }: React.ComponentProps<"div">) {
 
   return (
     <div className={cn("space-y-8", className)} {...props}>
-      {/* SAP-1 Computer Visualization */}
       <div className="mx-auto flex w-fit">
         <div className="flex w-fit flex-col">
           <SystemComponent
@@ -460,14 +456,14 @@ export function SapOne({ className, ...props }: React.ComponentProps<"div">) {
               ],
               bottom: [
                 [
-                  { dir: "ttb", active: isBitSet(accumulator, 7) },
-                  { dir: "ttb", active: isBitSet(accumulator, 6) },
-                  { dir: "ttb", active: isBitSet(accumulator, 5) },
-                  { dir: "ttb", active: isBitSet(accumulator, 4) },
-                  { dir: "ttb", active: isBitSet(accumulator, 3) },
-                  { dir: "ttb", active: isBitSet(accumulator, 2) },
-                  { dir: "ttb", active: isBitSet(accumulator, 1) },
-                  { dir: "ttb", active: isBitSet(accumulator, 0) },
+                  { dir: "ttb", active: isBitSet(unit, 7) },
+                  { dir: "ttb", active: isBitSet(unit, 6) },
+                  { dir: "ttb", active: isBitSet(unit, 5) },
+                  { dir: "ttb", active: isBitSet(unit, 4) },
+                  { dir: "ttb", active: isBitSet(unit, 3) },
+                  { dir: "ttb", active: isBitSet(unit, 2) },
+                  { dir: "ttb", active: isBitSet(unit, 1) },
+                  { dir: "ttb", active: isBitSet(unit, 0) },
                 ],
               ],
             }}
@@ -631,14 +627,11 @@ export function SapOne({ className, ...props }: React.ComponentProps<"div">) {
           />
 
           <Card className="mx-auto flex h-full w-64 flex-row items-center justify-center p-4">
-            <Display digit={(output >> 4) as Hex} />
-            <Display digit={(output & 0x0f) as Hex} />
+            <Display digit={output >> 4} />
+            <Display digit={output & 0x0f} />
           </Card>
         </div>
       </div>
-
-      {/* Assembler Panel */}
-      <AssemblerPanel />
     </div>
   );
 }

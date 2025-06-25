@@ -25,7 +25,7 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} min-h-svh overflow-x-hidden font-sans antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} min-h-svh overflow-x-hidden font-sans antialiased [--navbar-height:calc(theme(spacing.14))]`}
       >
         <ThemeProvider
           attribute="class"
