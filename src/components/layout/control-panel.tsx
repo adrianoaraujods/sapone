@@ -2,17 +2,27 @@
 
 import * as React from "react";
 
+import { toast } from "sonner";
+
 import { useSystem } from "@/hooks/use-system";
 import { assembleProgram } from "@/lib/assembler";
+import { MemoryInput } from "@/components/memory-input";
 import { Heading } from "@/components/typography/heading";
 import { Text } from "@/components/typography/text";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Slider } from "@/components/ui/slider";
 import { Textarea } from "@/components/ui/textarea";
 import { runClock, runProgramWithClock, setMemory } from "@/system/sap";
 
 import {
+  BugIcon,
   ClockAlertIcon,
   ClockArrowDownIcon,
   ClockArrowUpIcon,
@@ -21,6 +31,8 @@ import {
   OctagonPauseIcon,
   PlayIcon,
 } from "lucide-react";
+
+import { ScrollArea } from "../ui/scroll-area";
 
 const INITIAL_CODE = `
 LDA VALUE1       ; Carrega valor
@@ -97,9 +109,41 @@ export function ControlPanel() {
       <div className="mb-2 flex items-center justify-between">
         <Heading size="xl">Código Máquina</Heading>
 
-        <Button variant="ghost" size="icon">
-          <HelpCircleIcon />
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button variant="ghost" size="icon">
+            <HelpCircleIcon />
+          </Button>
+
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button
+                className="animate-pulse"
+                variant="destructive"
+                disabled={result.errors.length === 0}
+              >
+                <BugIcon />
+
+                <Text>Erros</Text>
+              </Button>
+            </DialogTrigger>
+
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Erros no código máquina</DialogTitle>
+              </DialogHeader>
+
+              <ScrollArea>
+                <ul className="max-h-[320px]">
+                  {result.errors.map((error, i) => (
+                    <li key={i}>
+                      <Text variant="destructive">{error}</Text>
+                    </li>
+                  ))}
+                </ul>
+              </ScrollArea>
+            </DialogContent>
+          </Dialog>
+        </div>
       </div>
 
       <div>
@@ -117,14 +161,23 @@ export function ControlPanel() {
             className="!bg-blue-500 !text-white hover:!bg-blue-500/70"
             variant="outline"
             onClick={() => {
-              setMemory({
-                system,
-                update: setSystem,
-                program: result.program.map(({ address, data }) => ({
-                  address,
-                  data,
-                })),
-              });
+              if (result.errors.length == 0) {
+                setMemory({
+                  system,
+                  update: setSystem,
+                  program: result.program.map(({ address, data }) => ({
+                    address,
+                    data,
+                  })),
+                });
+              } else {
+                toast.error(
+                  `Erro${result.errors.length > 1 ? "s" : ""} ao compilar o código`,
+                  {
+                    richColors: true,
+                  }
+                );
+              }
             }}
             disabled={isRunning}
           >
@@ -195,12 +248,11 @@ export function ControlPanel() {
       </div>
 
       <div className="grid w-fit grid-cols-4 gap-2">
-        {system.ram.map((value, i) => (
-          <Input
-            className="data-[active=true]:!bg-primary max-w-32 text-center font-mono"
-            data-active={i === system.memoryAddressRegister}
-            value={value.toString(16).toUpperCase().padStart(2, "0")}
-            disabled
+        {system.ram.map((_, i) => (
+          <MemoryInput
+            className="data-[active=true]:!bg-primary/70 max-w-32 text-center font-mono"
+            disabled={isRunning}
+            index={i}
             key={i}
           />
         ))}

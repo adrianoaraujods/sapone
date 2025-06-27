@@ -6,6 +6,7 @@ import "@/styles/globals.css";
 
 import { BackgroundPattern } from "@/components/layout/background-pattern";
 import SystemProvider from "@/components/system-provider";
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -36,6 +37,7 @@ export default function RootLayout({
           <SystemProvider>
             {children}
 
+            <Toaster />
             <BackgroundPattern />
           </SystemProvider>
         </ThemeProvider>
