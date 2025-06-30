@@ -156,6 +156,7 @@ export function runClock({ system, update }: SystemComponent) {
   });
 }
 
+// NEW: OPCODES MIGHT NEED LOGIC HERE.
 function handleRisingEdge({ system, update }: SystemComponent) {
   update((prev) => {
     const newSystem = { ...prev };
@@ -169,9 +170,6 @@ function handleRisingEdge({ system, update }: SystemComponent) {
     if (signals.Lo) newSystem.output = newSystem.bus;
     if (signals.Cp) newSystem.programCounter = newSystem.bus;
 
-    // NEW: OPCODES MIGHT NEED LOGIC HERE.
-    // Handle RAM write (RI is implicitly the inverse of CE for bus operations)
-    // need to implement a function for this, but the skeleton is this.
     if (
       getOpcode(newSystem.iRegister) === OPERATIONS.STO &&
       signals.Ea &&
@@ -190,6 +188,7 @@ function handleRisingEdge({ system, update }: SystemComponent) {
   });
 }
 
+// NEW: OPCODES MIGHT NEED LOGIC HERE (in this function).
 function handleFallingEdge({ system, update }: SystemComponent) {
   update((prev) => {
     const newSystem = { ...prev };
@@ -229,8 +228,6 @@ function handleFallingEdge({ system, update }: SystemComponent) {
     if (signals.Eu) busValue = aluResult & 0xff;
 
     newSystem.bus = busValue;
-
-    // NEW: OPCODES MIGHT NEED LOGIC HERE.
 
     // Update ALU unit and flags if needed
     if (signals.Eu) {
