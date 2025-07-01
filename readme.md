@@ -114,3 +114,22 @@ function parseLine(
       }
 // ...
 ```
+## Instruções Válidas para o Assembler
+
+A seguir estão os mnemônicos reconhecidos pelo assembler do emulador SAP-1:
+
+### Instruções de Operação
+
+- `LDA` – Carrega um valor da memória para o registrador A  
+- `ADD` – Soma um valor da memória ao registrador A  
+- `SUB` – Subtrai um valor da memória do registrador A  
+- `JMP` – Salta para o endereço especificado  
+- `STO` – Armazena o valor do registrador A na memória  
+- `OUT` – Envia o valor do registrador A para a saída  
+- `HLT` – Encerra a execução do programa  
+
+### Diretivas de Dados
+
+- `ORG` – Define o endereço de origem (posição inicial da memória para a próxima instrução ou dado)  
+- `DAT` – Define uma constante ou valor literal a ser armazenado na memória  
+
