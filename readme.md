@@ -1,11 +1,16 @@
 # Emulador SAP-1
 
 ## Autores
- - Adriano Araújo Domingos dos Santos
- - Diego Henrique Xavier dos Santos
- - Marcos Vinícius Nunes Reis 
- - Rafael Georgetti Grossi
- - Vitor Daniel Silva Melo
+
+- Adriano Araújo Domingos dos Santos
+- Diego Henrique Xavier dos Santos
+- Marcos Vinícius Nunes Reis
+- Rafael Georgetti Grossi
+- Vitor Daniel Silva Melo
+
+## Vídeo de Apresentação
+
+https://youtu.be/FvLVA8Chj78
 
 ## Propósito
 
@@ -14,6 +19,7 @@ O projeto é um emulador para a arquitetura de computador **SAP-1 (Simple-As-Pos
 ## Instruções para Compilar e Executar
 
 Para compilar e executar este projeto, você precisará ter o **Node.js** e **npm** instalados.
+
 ```bash
 git clone https://github.com/adrianoaraujods/sapone.git
 cd sapone
@@ -54,9 +60,9 @@ const EXECUTION_CYCLE = {
   // ... ciclos de execução existentes
   [OPERATIONS.SUA_NOVA_INSTRUCAO]: [
     CONTROL_MASKS.Ei | CONTROL_MASKS.Lm, // T4
-    0,                                   // T5
-    0                                    // T6
-    ],
+    0, // T5
+    0, // T6
+  ],
   // ...
 };
 ```
@@ -66,7 +72,9 @@ const EXECUTION_CYCLE = {
 Se a nova instrução exigir alguma lógica especial que não seja tratada apenas pelas palavras de controle, pode ser necessário adicioná-la às funções `handleRisingEdge` ou `handleFallingEdge` em `src/system/sap.ts`. Elas são responsáveis por executar os comandos em borda de subida e descida do clock.
 
 #### Exemplo
+
 Ao adicionar um jump condicional se a flag Zero estiver ativa (JMZ), deve-se alterar a função handleFallingEdge.
+
 ```typescript
 // src/system/sap.ts
 function handleFallingEdge({ system, update }: SystemComponent) {
@@ -84,6 +92,7 @@ function handleFallingEdge({ system, update }: SystemComponent) {
     else if (newSystem.tState <= 3) {
       // ...
 ```
+
 ### Assembler (se necessário)
 
 Caso a instrução adicionada não tenha operando e/ou tenha mais de um operando, também deve-se editar o arquivo `src/lib/assembler.ts` conforme necessário.
