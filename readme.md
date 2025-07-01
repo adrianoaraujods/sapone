@@ -3,8 +3,8 @@
 ## Autores
  - Adriano Araújo Domingos dos Santos
  - Diego Henrique Xavier dos Santos
- - Marcos Vinicius Nunes Reis 
- - Rafael Georgettti Grossi
+ - Marcos Vinícius Nunes Reis 
+ - Rafael Georgetti Grossi
  - Vitor Daniel Silva Melo
 
 ## Propósito
